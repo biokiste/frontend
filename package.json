@@ -6,6 +6,8 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "autoprefixer": "^9.7.3",
+    "postcss-cli": "^6.1.3",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
@@ -19,7 +21,10 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "docs": "npx styleguidist server",
-    "build-docs": "npx styleguidist build"
+    "build-docs": "npx styleguidist build",
+    "build-styles": "postcss src/styles/tailwind.css -o src/styles/index.css",
+    "prebuild": "yarn build-styles",
+    "prestart": "yarn build-styles"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -43,6 +48,7 @@
     "@storybook/addons": "^5.2.8",
     "@storybook/react": "^5.2.8",
     "babel-loader": "^8.0.6",
-    "react-styleguidist": "^10.3.2"
+    "react-styleguidist": "^10.3.2",
+    "tailwindcss": "^1.1.4"
   }
 }
