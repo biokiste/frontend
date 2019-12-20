@@ -4,9 +4,9 @@ import PropTypes from "prop-types";
 function AppHeader(props) {
   const { logo, link } = props;
   return (
-    <header className="md:flex items-center justify-center">
+    <header className="container mx-auto m-4 p-2 border rounded-lg md:flex items-center justify-center">
       <div className="md:flex-shrink-0">
-        <img src={logo} className="w-56" alt="logo" />
+        <img src={logo} className="w-56 mr-4" alt="logo" />
       </div>
       <div>
         <p>
@@ -22,14 +22,14 @@ function AppHeader(props) {
         </a>
       </div>
     </header>
-  )
+  );
 }
 
 AppHeader.propTypes = {
   /** Image shown before header text */
   logo: PropTypes.string.isRequired,
   /** Link provided in header text */
-  link: PropTypes.string.isRequired,
+  link: PropTypes.string.isRequired
 };
 
 export default AppHeader;
