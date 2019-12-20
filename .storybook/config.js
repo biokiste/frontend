@@ -1,4 +1,5 @@
 import { configure } from "@storybook/react";
 
-// automatically import all files ending in *.stories.js
+import "../src/styles/tailwind.css";
+
 configure(require.context("../src", true, /\.stories\.js$/), module);

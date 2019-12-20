@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# storybook with tailwind
+./storybook/tailwind.config.js
