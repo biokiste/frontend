@@ -1,9 +1,8 @@
 import React from "react";
-import logo from "./logo.svg";
-import AppHeader from "./components/AppHeader";
+import StatusBadge from "./components/StatusBadge";
 
 function App() {
-  return <AppHeader logo={logo} link="https://reactjs.org" />;
+  return <StatusBadge name="API" url="/api/status" />;
 }
 
 export default App;
