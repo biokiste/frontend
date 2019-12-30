@@ -7,23 +7,35 @@ const initialState = { color: "gray" };
 function useStatus(url) {
   const [status, setStatus] = useState();
   useEffect(() => {
+    let timeout;
+    function retry(time = 5000) {
+      timeout = setTimeout(() => doRequest(url), time);
+    }
+
     async function doRequest(url) {
       try {
         const res = await fetch(url);
         if (res.status !== 200) {
           setStatus("error");
+          retry();
         } else {
+          clearTimeout(timeout);
           setStatus("success");
         }
       } catch (err) {
         setStatus("error");
+        retry();
       }
     }
     if (url) {
       setStatus("calling");
       doRequest(url);
     }
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [url]);
+
   return status;
 }
 
