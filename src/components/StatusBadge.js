@@ -9,8 +9,12 @@ function useStatus(url) {
   useEffect(() => {
     async function doRequest(url) {
       try {
-        await fetch(url);
-        setStatus("success");
+        const res = await fetch(url);
+        if (res.status !== 200) {
+          setStatus("error");
+        } else {
+          setStatus("success");
+        }
       } catch (err) {
         setStatus("error");
       }
