@@ -1,11 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { getBackgroundColor } from "../utils/tailwind";
 
+/**
+ * Simple Badge
+ */
 function Badge({ color, children }) {
-  const colorClass = `bg-${color}-200`;
+  const bgColor = getBackgroundColor(color, 200);
   return (
     <div
-      className={`m-2 px-2 border border-b-2 rounded-sm w-auto h-auto font-mono text-xs inline-block ${colorClass}`}
+      className={`m-2 px-2 border border-b-2 rounded-sm w-auto h-auto font-mono text-xs inline-block ${bgColor}`}
     >
       {children}
     </div>
@@ -14,8 +18,7 @@ function Badge({ color, children }) {
 
 Badge.propTypes = {
   /**
-   * Background color
-   * @see [Tailwindcss Background Color](https://tailwindcss.com/docs/background-color)
+   * Background color name
    */
   color: PropTypes.string,
   /** Children */
@@ -23,6 +26,10 @@ Badge.propTypes = {
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node
   ]).isRequired
+};
+
+Badge.defaultProps = {
+  color: "white"
 };
 
 export default Badge;
