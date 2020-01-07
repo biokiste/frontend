@@ -73,7 +73,7 @@ StatusBadge.propTypes = {
   /** URL of API */
   url: PropTypes.string,
   /** Status of API*/
-  status: PropTypes.string
+  status: PropTypes.oneOf(["success", "calling", "error"])
 };
 
 export default StatusBadge;
