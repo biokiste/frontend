@@ -1,3 +1,17 @@
+# Frontend
+
+## Deployment Status
+
+**[Documentation](https://tender-jepsen-30a480.netlify.com)**
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/0f42c4eb-ffdc-4043-be14-1f75233b753a/deploy-status)](https://app.netlify.com/sites/tender-jepsen-30a480/deploys)
+
+**[Storybook](https://focused-panini-e1ae07.netlify.com/)**
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/399baca3-278d-4588-8bc6-1fe957191297/deploy-status)](https://app.netlify.com/sites/focused-panini-e1ae07/deploys)
+
+---
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
