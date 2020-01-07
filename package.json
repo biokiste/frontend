@@ -22,8 +22,8 @@
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "docs": "npx styleguidist server",
-    "build-docs": "npx styleguidist build",
+    "docs": "yarn build-styles && npx styleguidist server",
+    "build-docs": "yarn build-styles && npx styleguidist build",
     "build-styles": "postcss src/styles/tailwind.css -o src/styles/index.css",
     "prebuild": "yarn build-styles",
     "prestart": "yarn build-styles"

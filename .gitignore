@@ -24,3 +24,6 @@ yarn-error.log*
 
 # storybook with tailwind
 ./storybook/tailwind.config.js
+
+# tailwindcss build
+./src/styles/index.css
