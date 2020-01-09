@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useCalculator } from "./CalculatorContext";
 import { getBackgroundColor, getTextColor } from "../../utils/tailwind";
+import { PurchaseCategories } from "./consts";
 
 function CalculatorDisplay(props) {
   const { value } = props;
@@ -127,7 +128,7 @@ function Calculator(props) {
         <div className="w-1/5 pr-1">
           <MemorizedCalculatorButton
             color="green"
-            value="SEPA"
+            value={PurchaseCategories.GiroTransfer}
             onClick={onClick}
             disabled={!onSubmit}
             small
@@ -136,7 +137,7 @@ function Calculator(props) {
         <div className="w-1/5 pr-1">
           <MemorizedCalculatorButton
             color="green"
-            value="BAR"
+            value={PurchaseCategories.CashPayment}
             onClick={onClick}
             disabled={!onSubmit}
             small
@@ -145,7 +146,7 @@ function Calculator(props) {
         <div className="w-1/5 pr-1">
           <MemorizedCalculatorButton
             color="green"
-            value="Pfand"
+            value={PurchaseCategories.Deposit}
             onClick={onClick}
             disabled={!onSubmit}
             small
@@ -153,7 +154,7 @@ function Calculator(props) {
         </div>
         <div className="w-1/5 pr-1">
           <MemorizedCalculatorButton
-            value="7%"
+            value={PurchaseCategories.ReducedVAT}
             onClick={onClick}
             disabled={!onSubmit}
             small
@@ -161,7 +162,7 @@ function Calculator(props) {
         </div>
         <div className="w-1/5">
           <MemorizedCalculatorButton
-            value="19%"
+            value={PurchaseCategories.VAT}
             onClick={onClick}
             disabled={!onSubmit}
             small
