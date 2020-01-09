@@ -2,7 +2,7 @@ import React from "react";
 import Badge from "../components/Badge";
 
 export default {
-  title: "Badge"
+  title: "Basic|Badge"
 };
 
 const name = "story badge";

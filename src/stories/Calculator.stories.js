@@ -4,7 +4,7 @@ import Calculator from "../components/purchase/Calculator";
 import { CalculatorProvider } from "../components/purchase/CalculatorContext";
 
 export default {
-  title: "Calculator"
+  title: "Purchase|Calculator"
 };
 
 export const withDefault = () => (

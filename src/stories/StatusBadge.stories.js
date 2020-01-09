@@ -2,7 +2,7 @@ import React from "react";
 import StatusBadge from "../components/StatusBadge";
 
 export default {
-  title: "StatusBadge"
+  title: "Basic|StatusBadge"
 };
 
 const name = "backend";
