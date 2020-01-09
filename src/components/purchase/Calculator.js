@@ -115,10 +115,13 @@ const MemorizedCalculatorButton = React.memo(CalculatorButton);
  */
 function Calculator(props) {
   const { onSubmit } = props;
-  const { value } = useCalculator();
+  const { value, reset } = useCalculator();
 
   const onClick = btnValue => {
-    onSubmit && onSubmit({ type: btnValue, value });
+    if (onSubmit) {
+      onSubmit(btnValue, value);
+      reset();
+    }
   };
 
   return (
