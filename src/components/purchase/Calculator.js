@@ -1,5 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
+import { FontAwesomeIcon as Icon } from "@fortawesome/react-fontawesome";
+import { faBackspace } from "@fortawesome/free-solid-svg-icons";
 import { useCalculator } from "./CalculatorContext";
 import { getBackgroundColor, getTextColor } from "../../utils/tailwind";
 import { PurchaseCategories } from "./consts";
@@ -94,7 +96,7 @@ function CalculatorButton(props) {
   const isSmall = small ? "px-2 text-xs" : "px-4 py-2";
   const isDisabled = disabled ? "opacity-25 pointer-events-none" : "";
 
-  const classes = `w-full ${bgColor} focus:outline-none focus:${bgColorFocus} hover:${bgColorFocus} active:${bgColorActive} rounded ${txtColor} ${isSmall} ${isDisabled}`.trimRight();
+  const classes = `w-full ${bgColor} focus:outline-none focus:${bgColorFocus} hover:${bgColorFocus} active:${bgColorActive} rounded font-bold ${txtColor} ${isSmall} ${isDisabled}`.trimRight();
 
   return (
     <button
@@ -103,7 +105,7 @@ function CalculatorButton(props) {
       aria-label={value}
       onClick={handleClick}
     >
-      {value}
+      {value === "DEL" ? <Icon icon={faBackspace} /> : value}
     </button>
   );
 }
