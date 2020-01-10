@@ -5,6 +5,7 @@ import Calculator from "./Calculator";
 import Overview from "./Overview";
 import { PurchaseCategories } from "./consts";
 import { toCurrency } from "../../utils/numbers";
+import { getTextColor } from "../../utils/tailwind";
 
 function AccountStatus(props) {
   const { accountBalance } = props;
@@ -29,7 +30,9 @@ function AccountStatus(props) {
   return (
     <>
       <p>Kontostand: {toCurrency(accountBalance)}</p>
-      <p>neuer Kontostand: {toCurrency(updatedBalance)}</p>
+      <p className={`${updatedBalance < 0 && getTextColor("red")}`}>
+        neuer Kontostand: {toCurrency(updatedBalance)}
+      </p>
     </>
   );
 }
