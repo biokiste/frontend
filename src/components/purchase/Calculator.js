@@ -6,6 +6,7 @@ import { useCalculator } from "./CalculatorContext";
 import { getBackgroundColor, getTextColor } from "../../utils/tailwind";
 import { PurchaseCategories } from "./consts";
 
+// TODO: format number showing in display using number (currency) utils
 function CalculatorDisplay(props) {
   const { value } = props;
 

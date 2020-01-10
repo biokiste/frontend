@@ -1,14 +1,15 @@
 import React from "react";
-import { usePurchase } from "./PurchaseContext";
 import { FontAwesomeIcon as Icon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { usePurchase } from "./PurchaseContext";
+import { toCurrency } from "../../utils/numbers";
 
 function CategoryHeader(props) {
   const { category, value } = props;
   return (
     <div className="flex flex-row p-3 border-b-2 border-dotted justify-between">
       <div className="font-bold">{category}</div>
-      <div>{`${value.toFixed(2).replace(".", ",")} €`}</div>
+      <div>{toCurrency(value)}</div>
     </div>
   );
 }
@@ -22,7 +23,7 @@ function Entry(props) {
   };
   return (
     <div className="flex flex-row justify-end p-2">
-      <div className="px-2">{`${value.toFixed(2).replace(".", ",")} €`}</div>
+      <div className="px-2">{toCurrency(value)}</div>
       <div className="px-2">
         <button onClick={onClick}>
           <Icon icon={faTrash} />

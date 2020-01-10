@@ -4,6 +4,7 @@ import { CalculatorProvider } from "./CalculatorContext";
 import Calculator from "./Calculator";
 import Overview from "./Overview";
 import { PurchaseCategories } from "./consts";
+import { toCurrency } from "../../utils/numbers";
 
 function AccountStatus(props) {
   const { accountBalance } = props;
@@ -27,10 +28,8 @@ function AccountStatus(props) {
   }, [state, accountBalance]);
   return (
     <>
-      <p>Kontostand: {`${accountBalance.toFixed(2).replace(".", ",")} €`}</p>
-      <p>
-        neuer Kontostand: {`${updatedBalance.toFixed(2).replace(".", ",")} €`}
-      </p>
+      <p>Kontostand: {toCurrency(accountBalance)}</p>
+      <p>neuer Kontostand: {toCurrency(updatedBalance)}</p>
     </>
   );
 }
