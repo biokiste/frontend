@@ -27,6 +27,9 @@ const purchaseReducer = (state, action) => {
       if (state[category] === undefined) {
         state[category] = [];
       }
+      if (value === "0") {
+        return state;
+      }
       const val = parseFloat(value.replace(",", "."));
       return {
         ...state,
