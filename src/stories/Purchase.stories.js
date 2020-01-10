@@ -8,9 +8,13 @@ import Overview from "../components/purchase/Overview";
 import { PurchaseProvider } from "../components/purchase/PurchaseContext";
 import { PurchaseCategories } from "../components/purchase/consts";
 
-storiesOf("Purchase|Container", module).add("default", () => {
-  return <Container />;
-});
+storiesOf("Purchase|Container", module)
+  .add("default", () => {
+    return <Container />;
+  })
+  .add("with account balance", () => {
+    return <Container accountBalance={200} />;
+  });
 
 storiesOf("Purchase|Overview", module)
   .add("default", () => {
