@@ -1,7 +1,7 @@
 import React, { createContext, useReducer, useContext } from "react";
-import { PurchaseCategories } from "./consts";
 import { fromCurrency } from "../../utils/numbers";
 import useAsyncError from "../../hooks/useAsyncError";
+import { ApplicationErrors, PurchaseCategories } from "../../consts";
 
 const PurchaseContext = createContext();
 
@@ -83,9 +83,7 @@ function PurchaseProvider(props) {
     if (category === PurchaseCategories.CashPayment) {
       const valid = fromCurrency(value) % 5 === 0;
       if (!valid) {
-        throwError(
-          new Error("Bitte bei Barzahlung nur mit Scheinen bezahlen. Danke!")
-        );
+        throwError(new Error(ApplicationErrors.WrongCashPayment));
       }
     }
     dispatch({ type: "ADD", category, value });

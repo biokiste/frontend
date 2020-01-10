@@ -1,3 +1,10 @@
+const WrongCashPayment =
+  "Bitte bei Barzahlung nur mit Scheinen bezahlen. Danke!";
+
+export const ApplicationErrors = {
+  WrongCashPayment
+};
+
 const GiroTransfer = "SEPA";
 const CashPayment = "BAR";
 const Deposit = "Pfand";

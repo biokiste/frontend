@@ -3,7 +3,7 @@ import { PurchaseProvider, usePurchase } from "./PurchaseContext";
 import { CalculatorProvider } from "./CalculatorContext";
 import Calculator from "./Calculator";
 import Overview from "./Overview";
-import { PurchaseCategories } from "./consts";
+import { PurchaseCategories } from "../../consts";
 import { toCurrency } from "../../utils/numbers";
 import { getTextColor } from "../../utils/tailwind";
 

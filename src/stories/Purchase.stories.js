@@ -6,7 +6,7 @@ import { CalculatorProvider } from "../components/purchase/CalculatorContext";
 import Container from "../components/purchase/Container";
 import Overview from "../components/purchase/Overview";
 import { PurchaseProvider } from "../components/purchase/PurchaseContext";
-import { PurchaseCategories } from "../components/purchase/consts";
+import { PurchaseCategories } from "../consts";
 
 storiesOf("Purchase|Container", module)
   .add("default", () => {
