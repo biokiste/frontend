@@ -1,7 +1,7 @@
 import React, { createContext, useReducer, useContext } from "react";
 import { fromCurrency } from "../../utils/numbers";
-import useAsyncError from "../../hooks/useAsyncError";
 import { ApplicationErrors, PurchaseCategories } from "../../consts";
+import { useAlert } from "../common/Alert";
 
 const PurchaseContext = createContext();
 
@@ -81,12 +81,13 @@ function PurchaseProvider(props) {
     purchaseReducer,
     createInitialState(defaultState)
   );
-  const throwError = useAsyncError();
+  const { showAlert } = useAlert();
   const add = (category, value) => {
     if (category === PurchaseCategories.CashPayment) {
       const valid = fromCurrency(value) % 5 === 0;
       if (!valid) {
-        throwError(new Error(ApplicationErrors.WrongCashPayment));
+        showAlert(ApplicationErrors.WrongCashPayment);
+        return;
       }
     }
     dispatch({ type: "ADD", category, value });

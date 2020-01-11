@@ -7,13 +7,22 @@ import Container from "../components/purchase/Container";
 import Overview from "../components/purchase/Overview";
 import { PurchaseProvider } from "../components/purchase/PurchaseContext";
 import { PurchaseCategories } from "../consts";
+import { AlertProvider } from "../components/common/Alert";
 
 storiesOf("Purchase|Container", module)
   .add("default", () => {
-    return <Container />;
+    return (
+      <AlertProvider>
+        <Container />
+      </AlertProvider>
+    );
   })
   .add("with account balance", () => {
-    return <Container accountBalance={200} />;
+    return (
+      <AlertProvider>
+        <Container accountBalance={200} />
+      </AlertProvider>
+    );
   });
 
 storiesOf("Purchase|Overview", module)
