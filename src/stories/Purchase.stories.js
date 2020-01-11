@@ -28,9 +28,11 @@ storiesOf("Purchase|Container", module)
 storiesOf("Purchase|Overview", module)
   .add("default", () => {
     return (
-      <PurchaseProvider>
-        <Overview />
-      </PurchaseProvider>
+      <AlertProvider>
+        <PurchaseProvider>
+          <Overview />
+        </PurchaseProvider>
+      </AlertProvider>
     );
   })
   .add("with initial state", () => {
@@ -38,9 +40,11 @@ storiesOf("Purchase|Overview", module)
       [PurchaseCategories.GiroTransfer]: { entries: [1.01, 20.99] }
     };
     return (
-      <PurchaseProvider initialState={initialState}>
-        <Overview />
-      </PurchaseProvider>
+      <AlertProvider>
+        <PurchaseProvider initialState={initialState}>
+          <Overview />
+        </PurchaseProvider>
+      </AlertProvider>
     );
   });
 
