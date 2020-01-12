@@ -1,6 +1,8 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
+import { action } from "@storybook/addon-actions";
 import { AlertProvider } from "../components/common/Alert";
+import Button from "../components/common/Button";
 
 storiesOf("Common|Alert", module)
   .add("with message string", () => {
@@ -36,3 +38,7 @@ storiesOf("Common|Alert", module)
       />
     );
   });
+
+storiesOf("Common|Button", module).add("default", () => {
+  return <Button value="Ok" onClick={action("onClick")} />;
+});

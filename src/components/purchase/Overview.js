@@ -3,6 +3,7 @@ import { FontAwesomeIcon as Icon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { usePurchase } from "./PurchaseContext";
 import { toCurrency } from "../../utils/numbers";
+import Button from "../common/Button";
 
 function CategoryHeader(props) {
   const { category, value } = props;
@@ -53,6 +54,9 @@ function Overview() {
             {state[category].entries.length > 0 && <hr className="border-2" />}
           </div>
         ))}
+      <div className="text-right mt-4">
+        <Button value="Abschließen" color="green" />
+      </div>
     </>
   );
 }
