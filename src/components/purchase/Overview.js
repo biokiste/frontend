@@ -70,9 +70,9 @@ function Overview(props) {
             <CategoryHeader category={category} value={state[category].sum} />
             {state[category].entries.map((entry, index) => (
               <Entry
-                key={category + entry + index}
+                key={category + entry.value + index}
                 category={category}
-                value={entry}
+                value={entry.value}
                 index={index}
               />
             ))}

@@ -34,7 +34,10 @@ const purchaseReducer = (state, action) => {
       return {
         ...state,
         [category]: {
-          entries: [...state[category].entries, val],
+          entries: [
+            ...state[category].entries,
+            { value: val, createdAt: new Date() }
+          ],
           sum: state[category].sum + val
         }
       };
@@ -43,7 +46,7 @@ const purchaseReducer = (state, action) => {
       if (state[category] === undefined) {
         return { ...state };
       }
-      const val = state[category].entries[index];
+      const entry = state[category].entries[index];
       return {
         ...state,
         [category]: {
@@ -51,7 +54,7 @@ const purchaseReducer = (state, action) => {
             ...state[category].entries.slice(0, index),
             ...state[category].entries.slice(index + 1)
           ],
-          sum: state[category].sum - val
+          sum: state[category].sum - entry.value
         }
       };
     }
