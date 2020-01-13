@@ -9,7 +9,7 @@ import { getTextColor } from "../../utils/tailwind";
 
 function AccountStatus(props) {
   const { accountBalance } = props;
-  const [updatedBalance = 0, setUpdateBalance] = useState();
+  const [updatedBalance = 0, setUpdatedBalance] = useState();
   const { state } = usePurchase();
 
   useEffect(() => {
@@ -25,7 +25,7 @@ function AccountStatus(props) {
       }
       return num - state[key].sum;
     }, accountBalance);
-    setUpdateBalance(result);
+    setUpdatedBalance(result);
   }, [state, accountBalance]);
   return (
     <>
