@@ -4,6 +4,7 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { usePurchase } from "./PurchaseContext";
 import { toCurrency } from "../../utils/numbers";
 import Button from "../common/Button";
+import { PurchaseCategories } from "../../consts";
 
 function CategoryHeader(props) {
   const { category, value } = props;
@@ -34,9 +35,33 @@ function Entry(props) {
   );
 }
 
-function Overview() {
+function Overview(props) {
+  const { onSubmit } = props;
   const { state } = usePurchase();
   const categories = Object.keys(state);
+
+  const onClick = () => {
+    onSubmit && onSubmit(state);
+  };
+
+  const hasEntries = categories.some(
+    category => state[category].entries.length > 0
+  );
+
+  const hasNegativeSum =
+    categories.reduce((num, category) => {
+      if (
+        [
+          PurchaseCategories.GiroTransfer,
+          PurchaseCategories.CashPayment,
+          PurchaseCategories.Deposit
+        ].some(key => key === category)
+      ) {
+        return num + state[category].sum;
+      }
+      return num - state[category].sum;
+    }, 0) < 0;
+
   return (
     <>
       {categories.length > 0 &&
@@ -55,7 +80,12 @@ function Overview() {
           </div>
         ))}
       <div className="text-right mt-4">
-        <Button value="Abschließen" color="green" />
+        <Button
+          value="Abschließen"
+          color="green"
+          onClick={onClick}
+          disabled={!hasEntries || hasNegativeSum}
+        />
       </div>
     </>
   );

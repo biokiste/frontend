@@ -13,14 +13,14 @@ storiesOf("Purchase|Container", module)
   .add("default", () => {
     return (
       <AlertProvider>
-        <Container />
+        <Container onSubmit={action("onSubmit")} />
       </AlertProvider>
     );
   })
   .add("with account balance", () => {
     return (
       <AlertProvider>
-        <Container accountBalance={200} />
+        <Container accountBalance={200} onSubmit={action("onSubmit")} />
       </AlertProvider>
     );
   });
@@ -30,7 +30,7 @@ storiesOf("Purchase|Overview", module)
     return (
       <AlertProvider>
         <PurchaseProvider>
-          <Overview />
+          <Overview onSubmit={action("onSubmit")} />
         </PurchaseProvider>
       </AlertProvider>
     );
@@ -42,7 +42,7 @@ storiesOf("Purchase|Overview", module)
     return (
       <AlertProvider>
         <PurchaseProvider initialState={initialState}>
-          <Overview />
+          <Overview onSubmit={action("onSubmit")} />
         </PurchaseProvider>
       </AlertProvider>
     );
