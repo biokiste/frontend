@@ -1,6 +1,6 @@
 # Frontend
 
-![Build Status](https://github.com/biokiste/frontend/workflows/Build/badge.svg)
+![Build Status](https://github.com/biokiste/frontend/workflows/Build/badge.svg) [![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/biokiste/frontend) 
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
