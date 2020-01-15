@@ -1,8 +1,8 @@
 import React from "react";
-import StatusBadge from "./components/StatusBadge";
+import AppContainer from "./sites/Container";
 
 function App() {
-  return <StatusBadge name="API" url="/api/status" />;
+  return <AppContainer />;
 }
 
 export default App;
