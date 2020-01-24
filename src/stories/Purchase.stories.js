@@ -37,7 +37,9 @@ storiesOf("Purchase|Overview", module)
   })
   .add("with initial state", () => {
     const initialState = {
-      [PurchaseCategories.GiroTransfer]: { entries: [1.01, 20.99] }
+      [PurchaseCategories.GiroTransfer]: {
+        entries: [{ value: 1.01 }, { value: 20.99 }]
+      }
     };
     return (
       <AlertProvider>

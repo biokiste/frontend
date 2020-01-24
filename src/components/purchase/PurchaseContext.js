@@ -70,7 +70,7 @@ function createInitialState(state) {
   }
   const enhancedState = Object.keys(state).reduce((obj, category) => {
     const entries = state[category].entries;
-    const sum = entries.reduce((num, entry) => (num += entry), 0);
+    const sum = entries.reduce((num, entry) => (num += entry.value), 0);
     obj[category] = { entries, sum };
     return obj;
   }, {});
