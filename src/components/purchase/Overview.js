@@ -1,6 +1,5 @@
 import React from "react";
-import { FontAwesomeIcon as Icon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { Trash2 } from "react-feather";
 import { usePurchase } from "./PurchaseContext";
 import { toCurrency } from "../../utils/numbers";
 import Button from "../common/Button";
@@ -27,8 +26,11 @@ function Entry(props) {
     <div className="flex flex-row justify-end p-2">
       <div className="px-2">{toCurrency(value)}</div>
       <div className="px-2">
-        <button onClick={onClick}>
-          <Icon icon={faTrash} />
+        <button
+          className="text-black focus:outline-none hover:opacity-50"
+          onClick={onClick}
+        >
+          <Trash2 />
         </button>
       </div>
     </div>
