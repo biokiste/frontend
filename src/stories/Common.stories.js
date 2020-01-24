@@ -3,6 +3,8 @@ import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
 import { AlertProvider } from "../components/common/Alert";
 import Button from "../components/common/Button";
+import { Toolbar, ToolbarItem } from "../components/common/Toolbar";
+import { Info, ShoppingCart, Users, DollarSign, Settings } from "react-feather";
 
 storiesOf("Common|Alert", module)
   .add("with message string", () => {
@@ -41,4 +43,16 @@ storiesOf("Common|Alert", module)
 
 storiesOf("Common|Button", module).add("default", () => {
   return <Button value="Ok" onClick={action("onClick")} />;
+});
+
+storiesOf("Common|Toolbar", module).add("default", () => {
+  return (
+    <Toolbar>
+      <ToolbarItem icon={<Info />} />
+      <ToolbarItem icon={<ShoppingCart />} />
+      <ToolbarItem icon={<Users />} />
+      <ToolbarItem icon={<DollarSign />} />
+      <ToolbarItem icon={<Settings />} />
+    </Toolbar>
+  );
 });
