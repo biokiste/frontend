@@ -1,7 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import PropTypes from "prop-types";
-import { FontAwesomeIcon as Icon } from "@fortawesome/react-fontawesome";
-import { faBackspace } from "@fortawesome/free-solid-svg-icons";
+import { Delete } from "react-feather";
 import { useCalculator } from "./CalculatorContext";
 import { getBackgroundColor, getTextColor } from "../../utils/tailwind";
 import { PurchaseCategories } from "../../consts";
@@ -106,7 +105,7 @@ function CalculatorButton(props) {
       aria-label={value}
       onClick={handleClick}
     >
-      {value === "DEL" ? <Icon icon={faBackspace} /> : value}
+      {value === "DEL" ? <Delete className="m-auto" /> : value}
     </button>
   );
 }
