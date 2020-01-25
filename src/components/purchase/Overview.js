@@ -40,7 +40,7 @@ function Entry(props) {
 function Overview(props) {
   const { onSubmit } = props;
   const { state } = usePurchase();
-  const categories = Object.keys(state);
+  const categories = Object.keys(state).sort((a, b) => a.localeCompare(b));
 
   const onClick = () => {
     onSubmit && onSubmit(state);
