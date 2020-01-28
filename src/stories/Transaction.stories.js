@@ -18,8 +18,10 @@ storiesOf("Transaction|TransationList", module)
       { createdAt: new Date(), "BAR": 50, total: 50 },
     ]
     return (
-      <TransactionProvider initialState={initialState}>
-        <TransactionList />
-      </TransactionProvider>
+          <TransactionProvider initialState={initialState}>
+            <div className="container mx-auto p-2 flex flex-row flex-wrap">
+              <TransactionList />
+            </div>
+          </TransactionProvider>
     );
   })

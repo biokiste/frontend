@@ -3,6 +3,9 @@ module.exports = {
     extend: {
       screens: {
         landscape: { raw: "(orientation: landscape)" }
+      },
+      width: {
+        "1/7": "14.2857143%",
       }
     }
   },
