@@ -49,7 +49,6 @@ function CalculatorContainer() {
 function Container(props) {
   const { accountBalance = 0, onSubmit } = props;
   return (
-    <div className="container mx-auto p-2 flex flex-row flex-wrap">
       <PurchaseProvider>
         <div className="w-full p-2 flex flex-row flex-wrap">
           <div className="w-full sm:w-1/2">
@@ -67,7 +66,6 @@ function Container(props) {
           <Overview onSubmit={onSubmit} />
         </div>
       </PurchaseProvider>
-    </div>
   );
 }
 

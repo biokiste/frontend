@@ -13,14 +13,18 @@ storiesOf("Purchase|Container", module)
   .add("default", () => {
     return (
       <AlertProvider>
-        <Container onSubmit={action("onSubmit")} />
+        <div className="container mx-auto p-2 flex flex-row flex-wrap">
+          <Container onSubmit={action("onSubmit")} />
+        </div>
       </AlertProvider>
     );
   })
   .add("with account balance", () => {
     return (
       <AlertProvider>
-        <Container accountBalance={200} onSubmit={action("onSubmit")} />
+        <div className="container mx-auto p-2 flex flex-row flex-wrap">
+          <Container accountBalance={200} onSubmit={action("onSubmit")} />
+        </div>
       </AlertProvider>
     );
   });
