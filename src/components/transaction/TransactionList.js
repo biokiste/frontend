@@ -1,16 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { ArrowUpCircle, ArrowDownCircle } from "react-feather";
 import { PurchaseCategories } from "../../consts";
 import { useTransactions } from "./TransactionContext";
 import { toCurrency } from "../../utils/numbers";
-import { useTranslation } from "react-i18next";
 
 function TransactionList(props) {
   const categories = Object.keys(PurchaseCategories).sort((a, b) =>
     a.localeCompare(b)
   );
-  const keys = ["Date", ...categories, "Balance"];
-  const { t } = useTranslation();
+  const keys = ["createdAt", ...categories, "total"];
+  const { t } = useTranslation("transaction");
   const { transactions } = useTransactions();
+  const sortBy = "createdAt";
+  const [sort, setSort] = useState(1);
+
+  const handleSort = () => {
+    setSort(sort < 0 ? 1 : -1);
+  };
+
+  const sortedTransactions = transactions.sort((a, b) => {
+    if (sort < 0) {
+      return new Date(a[sortBy]) - new Date(b[sortBy]);
+    }
+    return new Date(b[sortBy]) - new Date(a[sortBy]);
+  });
+
   return (
     <div className="w-full p-2">
       <table className="table-fixed w-full">
@@ -18,25 +33,40 @@ function TransactionList(props) {
           <tr>
             {keys.map(key => {
               const category = PurchaseCategories[key];
+              const value = category || key;
               return (
                 <th
+                  key={key}
                   className={`p-4 py-2 ${
                     category !== undefined
                       ? "invisible md:visible"
                       : `w-1/2 md:w-1/${categories.length + 2}`
                   }`.trimRight()}
                 >
-                  {t(category || key)}
+                  <div className="flex flex-row justify-center">
+                    {sortBy === value && (
+                      <button
+                        className="mr-2 focus:outline-none"
+                        onClick={handleSort}
+                      >
+                        {sort > 0 ? <ArrowDownCircle /> : <ArrowUpCircle />}
+                      </button>
+                    )}
+                    {t(value)}
+                  </div>
                 </th>
               );
             })}
           </tr>
         </thead>
         <tbody>
-          {transactions.map((transaction, idx) => {
+          {sortedTransactions.map((transaction, idx) => {
             const { createdAt, total } = transaction;
             return (
-              <tr className={idx % 2 === 0 ? "bg-gray-100" : ""}>
+              <tr
+                key={`transaction-${idx}`}
+                className={idx % 2 === 0 ? "bg-gray-100" : ""}
+              >
                 <td className="border px-4 py-2 text-center">
                   {createdAt.toLocaleString("de-DE", {
                     dateStyle: "medium",
@@ -47,6 +77,7 @@ function TransactionList(props) {
                   const value = transaction[PurchaseCategories[category]];
                   return (
                     <td
+                      key={category}
                       className={`border px-4 py-2 text-center invisible md:visible md:w-1/${categories.length +
                         2}`}
                     >

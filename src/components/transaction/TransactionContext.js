@@ -15,20 +15,26 @@ function transactionReducer(state, action) {
 function TransactionProvider(props) {
   const { children, initialState: defaultState } = props;
   const [state, dispatch] = useReducer(transactionReducer, defaultState || []);
-  const add = (transaction) => {
+  const add = transaction => {
     dispatch({ type: "ADD", transaction });
-  }
+  };
   const value = {
     transactions: state,
-    add,
-  }
-  return <TransactionContext.Provider value={value}>{children}</TransactionContext.Provider>
+    add
+  };
+  return (
+    <TransactionContext.Provider value={value}>
+      {children}
+    </TransactionContext.Provider>
+  );
 }
 
 function useTransactions() {
   const context = useContext(TransactionContext);
   if (context === undefined) {
-    throw new Error("useTransactions must be used within a TransactionProvider");
+    throw new Error(
+      "useTransactions must be used within a TransactionProvider"
+    );
   }
   const { transactions, add } = context;
   return { transactions, add };

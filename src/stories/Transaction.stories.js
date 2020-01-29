@@ -14,9 +14,14 @@ storiesOf("Transaction|TransationList", module)
   })
   .add("with transactions", () => {
     const initialState = [
-      { createdAt: new Date(), "7%": -20.01, Pfand: 0.3, total: 230.29 },
-      { createdAt: new Date(), SEPA: 200, total: 250 },
-      { createdAt: new Date(), BAR: 50, total: 50 }
+      {
+        createdAt: new Date("2019-09-30"),
+        "7%": -20.01,
+        Pfand: 0.3,
+        total: 230.29
+      },
+      { createdAt: new Date("2019-05-17"), BAR: 50, total: 50 },
+      { createdAt: new Date("2019-09-05"), SEPA: 200, total: 250 }
     ];
     return (
       <TransactionProvider initialState={initialState}>
