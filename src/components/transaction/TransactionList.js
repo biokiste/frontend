@@ -10,10 +10,10 @@ function TransactionList(props) {
     a.localeCompare(b)
   );
   const keys = ["createdAt", ...categories, "total"];
-  const { t } = useTranslation("transaction");
+  const { t } = useTranslation(["transaction", "purchase"]);
   const { transactions } = useTransactions();
-  const sortBy = "createdAt";
   const [sort, setSort] = useState(1);
+  const sortBy = "createdAt";
 
   const handleSort = () => {
     setSort(sort < 0 ? 1 : -1);
@@ -41,7 +41,7 @@ function TransactionList(props) {
                     category !== undefined
                       ? "invisible md:visible"
                       : `w-1/2 md:w-1/${categories.length + 2}`
-                  }`.trimRight()}
+                    }`.trimRight()}
                 >
                   <div className="flex flex-row justify-center">
                     {sortBy === value && (
@@ -52,7 +52,7 @@ function TransactionList(props) {
                         {sort > 0 ? <ArrowDownCircle /> : <ArrowUpCircle />}
                       </button>
                     )}
-                    {t(value)}
+                    {t(value) === value ? t(`purchase:${value}`) : t(value)}
                   </div>
                 </th>
               );

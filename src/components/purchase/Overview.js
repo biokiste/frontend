@@ -4,12 +4,14 @@ import { usePurchase } from "./PurchaseContext";
 import { toCurrency } from "../../utils/numbers";
 import Button from "../common/Button";
 import { PurchaseCategories } from "../../consts";
+import { useTranslation } from "react-i18next";
 
 function CategoryHeader(props) {
   const { category, value } = props;
+  const { t } = useTranslation("purchase");
   return (
     <div className="flex flex-row p-3 border-b-2 border-dotted justify-between">
-      <div className="font-bold">{category}</div>
+      <div className="font-bold">{t(category)}</div>
       <div>{toCurrency(value)}</div>
     </div>
   );
@@ -40,6 +42,7 @@ function Entry(props) {
 function Overview(props) {
   const { onSubmit } = props;
   const { state } = usePurchase();
+  const { t } = useTranslation("purchase");
   const categories = Object.keys(state).sort((a, b) => a.localeCompare(b));
 
   const onClick = () => {
@@ -83,7 +86,7 @@ function Overview(props) {
         ))}
       <div className="text-right mt-4">
         <Button
-          value="Abschließen"
+          value={t("submit")}
           color="green"
           onClick={onClick}
           disabled={!hasEntries || hasNegativeSum}

@@ -1,0 +1,14 @@
+{
+  "giro": "SEPA",
+  "cash": "BAR",
+  "deposit": "Pfand",
+  "vat": "19%",
+  "reducedVat": "7%",
+  "delete": "löschen",
+  "clear": "zurücksetzen",
+  "purchase": "Einkaufen",
+  "balance": "Kontostand",
+  "new balance": "neuer Kontostand",
+  "submit": "Abschließen",
+  "errorWrongPayment": ""
+}

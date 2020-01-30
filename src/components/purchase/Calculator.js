@@ -4,6 +4,7 @@ import { Delete } from "react-feather";
 import { useCalculator } from "./CalculatorContext";
 import { getBackgroundColor, getTextColor } from "../../utils/tailwind";
 import { PurchaseCategories } from "../../consts";
+import { useTranslation } from "react-i18next";
 
 // TODO: format number showing in display using number (currency) utils
 function CalculatorDisplay(props) {
@@ -26,8 +27,6 @@ function CalculatorDisplay(props) {
 function CalculatorButton(props) {
   const {
     small = false,
-    clear = false,
-    del = false,
     color = "blue",
     textColor = "black",
     disabled,
@@ -35,8 +34,12 @@ function CalculatorButton(props) {
     value
   } = props;
 
+  const clear = value === "clear";
+  const del = value === "delete";
+
   const [keyPressed = false, setKeyPressed] = useState();
   const { add, reset, remove } = useCalculator();
+  const { t } = useTranslation("purchase");
 
   const handleClick = useCallback(() => {
     if (disabled) {
@@ -96,16 +99,16 @@ function CalculatorButton(props) {
   const isSmall = small ? "px-2 text-xs" : "px-4 py-2";
   const isDisabled = disabled ? "opacity-25 pointer-events-none" : "";
 
-  const classes = `w-full ${bgColor} focus:outline-none focus:${bgColorFocus} hover:${bgColorFocus} active:${bgColorActive} rounded font-bold ${txtColor} ${isSmall} ${isDisabled}`.trimRight();
+  const classes = `w-full ${bgColor} focus:outline-none focus:${bgColorFocus} hover:${bgColorFocus} active:${bgColorActive} rounded font-bold ${txtColor} ${isSmall} ${isDisabled} truncate`.trimRight();
 
   return (
     <button
       className={classes}
       type="button"
-      aria-label={value}
+      aria-label={t(value)}
       onClick={handleClick}
     >
-      {value === "DEL" ? <Delete className="m-auto" /> : value}
+      {value === "delete" ? <Delete className="m-auto" /> : value === "clear" ? "C" : t(value)}
     </button>
   );
 }
@@ -185,7 +188,7 @@ function Calculator(props) {
           <MemorizedCalculatorButton color="gray" value="9" />
         </div>
         <div className="w-1/4">
-          <MemorizedCalculatorButton color="orange" value="C" clear />
+          <MemorizedCalculatorButton color="orange" value="clear" />
         </div>
         <div className="w-1/4 pr-1 pb-1">
           <MemorizedCalculatorButton color="gray" value="4" />
@@ -197,7 +200,7 @@ function Calculator(props) {
           <MemorizedCalculatorButton color="gray" value="6" />
         </div>
         <div className="w-1/4">
-          <MemorizedCalculatorButton color="orange" value="DEL" del />
+          <MemorizedCalculatorButton color="orange" value="delete" />
         </div>
         <div className="w-1/4 pr-1 pb-1">
           <MemorizedCalculatorButton color="gray" value="1" />

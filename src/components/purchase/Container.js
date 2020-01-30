@@ -6,11 +6,13 @@ import Overview from "./Overview";
 import { PurchaseCategories } from "../../consts";
 import { toCurrency } from "../../utils/numbers";
 import { getTextColor } from "../../utils/tailwind";
+import { useTranslation } from "react-i18next";
 
 function AccountStatus(props) {
   const { accountBalance } = props;
   const [updatedBalance = 0, setUpdatedBalance] = useState();
   const { state } = usePurchase();
+  const { t } = useTranslation("purchase");
 
   useEffect(() => {
     const result = Object.keys(state).reduce((num, key) => {
@@ -29,9 +31,9 @@ function AccountStatus(props) {
   }, [state, accountBalance]);
   return (
     <>
-      <p>Kontostand: {toCurrency(accountBalance)}</p>
+      <p>{t("balance")}: {toCurrency(accountBalance)}</p>
       <p className={`${updatedBalance < 0 && getTextColor("red")}`}>
-        neuer Kontostand: {toCurrency(updatedBalance)}
+        {t("new balance")}: {toCurrency(updatedBalance)}
       </p>
     </>
   );
@@ -48,12 +50,13 @@ function CalculatorContainer() {
 
 function Container(props) {
   const { accountBalance = 0, onSubmit } = props;
+  const { t } = useTranslation("purchase");
   return (
       <PurchaseProvider>
         <div className="w-full p-2 flex flex-row flex-wrap">
           <div className="w-full sm:w-1/2">
             {/** TODO: Create headline component */}
-            <h1 className="text-4xl">Einkaufen</h1>
+            <h1 className="text-4xl">{t("purchase")}</h1>
           </div>
           <div className="w-full sm:w-1/2 text-left sm:text-right text-xl">
             <AccountStatus accountBalance={accountBalance} />

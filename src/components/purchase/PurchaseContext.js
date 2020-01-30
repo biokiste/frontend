@@ -2,6 +2,7 @@ import React, { createContext, useReducer, useContext } from "react";
 import { fromCurrency } from "../../utils/numbers";
 import { ApplicationErrors, PurchaseCategories } from "../../consts";
 import { useAlert } from "../common/Alert";
+import { useTranslation } from "react-i18next";
 
 const PurchaseContext = createContext();
 
@@ -85,11 +86,12 @@ function PurchaseProvider(props) {
     createInitialState(defaultState)
   );
   const { showAlert } = useAlert();
+  const { t } = useTranslation("errors");
   const add = (category, value) => {
     if (category === PurchaseCategories.CashPayment) {
       const valid = fromCurrency(value) % 5 === 0;
       if (!valid) {
-        showAlert(ApplicationErrors.WrongCashPayment);
+        showAlert(t(ApplicationErrors.WrongCashPayment));
         return;
       }
     }

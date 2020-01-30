@@ -1,15 +1,15 @@
 const WrongCashPayment =
-  "Bitte bei Barzahlung nur mit Scheinen bezahlen. Danke!";
+  "wrongCashPayment";
 
 export const ApplicationErrors = {
   WrongCashPayment
 };
 
-const GiroTransfer = "SEPA";
-const CashPayment = "BAR";
-const Deposit = "Pfand";
-const VAT = "19%";
-const ReducedVAT = "7%";
+const GiroTransfer = "giro";
+const CashPayment = "cash";
+const Deposit = "deposit";
+const VAT = "vat";
+const ReducedVAT = "reducedVat";
 
 export const PurchaseCategories = {
   GiroTransfer,
