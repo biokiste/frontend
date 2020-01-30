@@ -1,6 +1,6 @@
 import React, { createContext, useReducer, useContext } from "react";
 import { fromCurrency } from "../../utils/numbers";
-import { ApplicationErrors, PurchaseCategories } from "../../consts";
+import { ApplicationErrors, PurchaseCategories, AlertSeverity } from "../../consts";
 import { useAlert } from "../common/Alert";
 import { useTranslation } from "react-i18next";
 
@@ -91,7 +91,7 @@ function PurchaseProvider(props) {
     if (category === PurchaseCategories.CashPayment) {
       const valid = fromCurrency(value) % 5 === 0;
       if (!valid) {
-        showAlert(t(ApplicationErrors.WrongCashPayment));
+        showAlert(t(ApplicationErrors.WrongCashPayment), AlertSeverity.Error);
         return;
       }
     }

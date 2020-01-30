@@ -5,6 +5,7 @@ import { AlertProvider } from "../components/common/Alert";
 import Button from "../components/common/Button";
 import { Toolbar, ToolbarItem } from "../components/common/Toolbar";
 import { Info, ShoppingCart, Users, DollarSign, Settings } from "react-feather";
+import { AlertSeverity } from "../consts";
 
 storiesOf("Common|Alert", module)
   .add("with message string", () => {
@@ -13,6 +14,17 @@ storiesOf("Common|Alert", module)
         initialState={{
           show: true,
           message: "Alert Message"
+        }}
+      />
+    );
+  })
+  .add("with severity", () => {
+    return (
+      <AlertProvider
+        initialState={{
+          show: true,
+          message: "Error Message",
+          severity: AlertSeverity.Error
         }}
       />
     );

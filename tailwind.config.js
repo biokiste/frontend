@@ -1,3 +1,5 @@
+const { colors } = require('tailwindcss/defaultTheme');
+
 module.exports = {
   theme: {
     extend: {
@@ -6,6 +8,11 @@ module.exports = {
       },
       width: {
         "1/7": "14.2857143%",
+      },
+      colors: {
+        error: colors.red,
+        warning: colors.orange,
+        info: colors.green,
       }
     }
   },
