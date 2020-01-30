@@ -6,6 +6,7 @@ import Button from "../components/common/Button";
 import { Toolbar, ToolbarItem } from "../components/common/Toolbar";
 import { Info, ShoppingCart, Users, DollarSign, Settings } from "react-feather";
 import { AlertSeverity } from "../consts";
+import { getBackgroundColor, getTextColor } from "../utils/tailwind";
 
 storiesOf("Common|Alert", module)
   .add("with message string", () => {
@@ -68,3 +69,7 @@ storiesOf("Common|Toolbar", module).add("default", () => {
     </Toolbar>
   );
 });
+
+storiesOf("Common|DarkMode", module).add("default", () => {
+  return <div className={`fixed w-screen h-screen ${getBackgroundColor("white")} ${getTextColor("black")} flex justify-center items-center`}><p className="text-center">Just change your<br /><span className={`${getTextColor("blue", 800)}`}>Browser or OS Settings</span></p></div>
+})

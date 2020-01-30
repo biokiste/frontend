@@ -4,7 +4,8 @@ module.exports = {
   theme: {
     extend: {
       screens: {
-        landscape: { raw: "(orientation: landscape)" }
+        landscape: { raw: "(orientation: landscape)" },
+        'dark-mode': {'raw': '(prefers-color-scheme: dark)'},
       },
       width: {
         "1/7": "14.2857143%",

@@ -15,7 +15,11 @@ function getColor(color, intensity = 500) {
  * @param {number?} intensity
  */
 export function getBackgroundColor(color, intensity = 500) {
-  return `bg-${getColor(color, intensity)}`;
+  if (["white", "black"].some(item => item === color)) {
+    const opposite = color === "white" ? "black" : "white";
+    return `bg-${color} dark-mode:bg-${opposite}`;
+  }
+  return `bg-${getColor(color, intensity)} dark-mode:bg-${getColor(color, 1000 - intensity)}`;
 }
 
 /**
@@ -24,5 +28,9 @@ export function getBackgroundColor(color, intensity = 500) {
  * @param {number?} intensity
  */
 export function getTextColor(color, intensity = 500) {
-  return `text-${getColor(color, intensity)}`;
+  if (["white", "black"].some(item => item === color)) {
+    const opposite = color === "white" ? "black" : "white";
+    return `text-${color} dark-mode:text-${opposite}`;
+  }
+  return `text-${getColor(color, intensity)}  dark-mode:text-${getColor(color, 1000 - intensity)}`;
 }
