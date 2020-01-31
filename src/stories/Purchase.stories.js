@@ -3,7 +3,7 @@ import { action } from "@storybook/addon-actions";
 import { storiesOf } from "@storybook/react";
 import Calculator from "../components/purchase/Calculator";
 import { CalculatorProvider } from "../components/purchase/CalculatorContext";
-import Container from "../components/purchase/Container";
+import Container from "../components/purchase/PurchaseContainer";
 import Overview from "../components/purchase/Overview";
 import { PurchaseProvider } from "../components/purchase/PurchaseContext";
 import { PurchaseCategories } from "../consts";

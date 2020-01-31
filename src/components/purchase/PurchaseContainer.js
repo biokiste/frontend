@@ -48,28 +48,28 @@ function CalculatorContainer() {
   );
 }
 
-function Container(props) {
+function PurchaseContainer(props) {
   const { accountBalance = 0, onSubmit } = props;
   const { t } = useTranslation("purchase");
   return (
-      <PurchaseProvider>
-        <div className="w-full p-2 flex flex-row flex-wrap">
-          <div className="w-full sm:w-1/2">
-            {/** TODO: Create headline component */}
-            <h1 className="text-4xl">{t("purchase")}</h1>
-          </div>
-          <div className="w-full sm:w-1/2 text-left sm:text-right text-xl">
-            <AccountStatus accountBalance={accountBalance} />
-          </div>
+    <PurchaseProvider>
+      <div className="w-full flex flex-row flex-wrap">
+        <div className="w-full sm:w-1/2 p-2">
+          {/** TODO: Create headline component */}
+          <h1 className="text-4xl">{t("purchase")}</h1>
         </div>
-        <div className="w-full md:w-1/2 lg:w-1/3 p-2">
-          <CalculatorContainer />
+        <div className="w-full sm:w-1/2 p-2 text-left sm:text-right text-xl">
+          <AccountStatus accountBalance={accountBalance} />
         </div>
-        <div className="w-full md:w-1/2 lg:w-2/3 p-2">
-          <Overview onSubmit={onSubmit} />
-        </div>
-      </PurchaseProvider>
+      </div>
+      <div className="w-full md:w-1/2 lg:w-1/3 p-2">
+        <CalculatorContainer />
+      </div>
+      <div className="w-full md:w-1/2 lg:w-2/3 p-2">
+        <Overview onSubmit={onSubmit} />
+      </div>
+    </PurchaseProvider>
   );
 }
 
-export default Container;
+export default PurchaseContainer;
