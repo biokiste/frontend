@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowUpCircle, ArrowDownCircle } from "react-feather";
 import { PurchaseCategories } from "../../consts";
-import { useTransactions } from "./TransactionContext";
 import { toCurrency } from "../../utils/numbers";
 
 function TransactionList(props) {
+  const { transactions = [] } = props;
   const categories = Object.keys(PurchaseCategories).sort((a, b) =>
     a.localeCompare(b)
   );
   const keys = ["createdAt", ...categories, "total"];
   const { t } = useTranslation(["transaction", "purchase"]);
-  const { transactions } = useTransactions();
   const [sort, setSort] = useState(1);
   const sortBy = "createdAt";
 
@@ -81,7 +80,7 @@ function TransactionList(props) {
                       className={`border px-4 py-2 text-center invisible md:visible md:w-1/${categories.length +
                         2}`}
                     >
-                      {value !== undefined ? toCurrency(value) : ""}
+                      {value !== undefined && value !== 0 ? toCurrency(value) : ""}
                     </td>
                   );
                 })}
