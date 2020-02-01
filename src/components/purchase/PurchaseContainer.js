@@ -31,7 +31,9 @@ function AccountStatus(props) {
   }, [state, accountBalance]);
   return (
     <>
-      <p>{t("balance")}: {toCurrency(accountBalance)}</p>
+      <p>
+        {t("balance")}: {toCurrency(accountBalance)}
+      </p>
       <p className={`${updatedBalance < 0 && getTextColor("red")}`}>
         {t("new balance")}: {toCurrency(updatedBalance)}
       </p>
@@ -66,7 +68,7 @@ function PurchaseContainer(props) {
         <CalculatorContainer />
       </div>
       <div className="w-full md:w-1/2 lg:w-2/3 p-2">
-        <Overview onSubmit={onSubmit} />
+        <Overview onSubmit={onSubmit} balance={accountBalance} />
       </div>
     </PurchaseProvider>
   );

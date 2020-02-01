@@ -40,7 +40,7 @@ function Entry(props) {
 }
 
 function Overview(props) {
-  const { onSubmit } = props;
+  const { onSubmit, balance = 0 } = props;
   const { state, clear } = usePurchase();
   const { t } = useTranslation("purchase");
   const categories = Object.keys(state).sort((a, b) => a.localeCompare(b));
@@ -66,7 +66,7 @@ function Overview(props) {
         return num + state[category].sum;
       }
       return num - state[category].sum;
-    }, 0) < 0;
+    }, balance) < 0;
 
   return (
     <>

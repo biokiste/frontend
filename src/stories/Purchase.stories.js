@@ -52,6 +52,23 @@ storiesOf("Purchase|Overview", module)
         </PurchaseProvider>
       </AlertProvider>
     );
+  })
+  .add("with inital balance negative sum", () => {
+    const initialState = {
+      [PurchaseCategories.VAT]: {
+        entries: [{ value: 4.99 }, { value: 1.99 }]
+      },
+      [PurchaseCategories.ReducedVAT]: {
+        entries: [{ value: 3.99 }]
+      }
+    };
+    return (
+      <AlertProvider>
+        <PurchaseProvider initialState={initialState}>
+          <Overview onSubmit={action("onSubmit")} balance={10} />
+        </PurchaseProvider>
+      </AlertProvider>
+    );
   });
 
 storiesOf("Purchase|Calculator", module)
