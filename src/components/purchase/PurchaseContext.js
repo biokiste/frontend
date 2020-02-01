@@ -1,6 +1,10 @@
 import React, { createContext, useReducer, useContext } from "react";
 import { fromCurrency } from "../../utils/numbers";
-import { ApplicationErrors, PurchaseCategories, AlertSeverity } from "../../consts";
+import {
+  ApplicationErrors,
+  PurchaseCategories,
+  AlertSeverity
+} from "../../consts";
 import { useAlert } from "../common/Alert";
 import { useTranslation } from "react-i18next";
 
@@ -17,6 +21,7 @@ const initialState = {
 const purchaseReducer = (state, action) => {
   const { type, category, value, index } = action;
   if (
+    type !== "CLEAR" &&
     !Object.keys(PurchaseCategories).some(
       key => PurchaseCategories[key] === category
     )
@@ -59,6 +64,9 @@ const purchaseReducer = (state, action) => {
         }
       };
     }
+    case "CLEAR": {
+      return initialState;
+    }
     default: {
       throw new Error(`Unhandled action type: ${type}`);
     }
@@ -99,7 +107,10 @@ function PurchaseProvider(props) {
   };
   const remove = (category, index) =>
     dispatch({ type: "REMOVE", category, index });
-  const value = { state, add, remove };
+  const clear = () => {
+    dispatch({ type: "CLEAR" });
+  };
+  const value = { state, add, remove, clear };
   return (
     <PurchaseContext.Provider value={value}>
       {children}
@@ -114,9 +125,9 @@ function usePurchase(category) {
   }
   const state =
     category === undefined ? context.state : context.state[category];
-  const { add, remove } = context;
+  const { add, remove, clear } = context;
 
-  return { state, add, remove };
+  return { state, add, remove, clear };
 }
 
 export { PurchaseProvider, usePurchase };

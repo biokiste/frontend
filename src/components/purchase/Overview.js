@@ -41,12 +41,13 @@ function Entry(props) {
 
 function Overview(props) {
   const { onSubmit } = props;
-  const { state } = usePurchase();
+  const { state, clear } = usePurchase();
   const { t } = useTranslation("purchase");
   const categories = Object.keys(state).sort((a, b) => a.localeCompare(b));
 
   const onClick = () => {
     onSubmit && onSubmit(state);
+    clear();
   };
 
   const hasEntries = categories.some(
