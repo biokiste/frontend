@@ -4,29 +4,19 @@ import { ChevronDown, ChevronUp } from "react-feather";
 import { PurchaseCategories } from "../../consts";
 import { toCurrency } from "../../utils/numbers";
 
-const Model = {
-  createdAt: {
-    type: "Date"
-  },
-  [PurchaseCategories.CashPayment]: {
-    type: "Number"
-  },
-  [PurchaseCategories.Deposit]: {
-    type: "Number"
-  },
-  [PurchaseCategories.GiroTransfer]: {
-    type: "Number"
-  },
-  [PurchaseCategories.ReducedVAT]: {
-    type: "Number"
-  },
-  [PurchaseCategories.VAT]: {
-    type: "Number"
-  },
-  total: {
-    type: "Number"
+function formatValue(value, type, isCategory) {
+  if (value === undefined || (isCategory && value === 0)) {
+    return "";
   }
-};
+  switch (type) {
+    case "Date":
+      return value.toLocaleString("de-DE", {
+        dateStyle: "medium"
+      });
+    default:
+      return toCurrency(value);
+  }
+}
 
 function CategoryHeader(props) {
   const { category, sortBy, sort, onChangeSort, onChangeSortBy } = props;
@@ -58,15 +48,19 @@ function CategoryHeader(props) {
 }
 
 function TransactionList(props) {
-  const { transactions = [] } = props;
+  const { transactions = [], categories = [] } = props;
 
-  const keys = Object.keys(Model);
+  const keys = categories.map(category => category.name);
   const [sort, setSort] = useState(1);
-  const [sortBy, setSortBy] = useState("createdAt");
+  const [sortBy, setSortBy] = useState(keys[0]);
 
   useEffect(() => {
     setSort(1);
   }, [sortBy]);
+
+  useEffect(() => {
+    setSortBy(categories[0] && categories[0].name);
+  }, [categories]);
 
   const handleSort = () => {
     setSort(sort < 0 ? 1 : -1);
@@ -77,10 +71,16 @@ function TransactionList(props) {
   };
 
   const sortedTransactions = transactions.sort((a, b) => {
+    const category = categories.find(({ name }) => name === sortBy);
+
+    if (!category) {
+      return 0;
+    }
+
     const valA = sort < 0 ? a[sortBy] : b[sortBy];
     const valB = sort < 0 ? b[sortBy] : a[sortBy];
 
-    switch (Model[sortBy].type) {
+    switch (category.type) {
       case "Date":
         return new Date(valA) - new Date(valB);
       default:
@@ -97,7 +97,6 @@ function TransactionList(props) {
               const categoryKey = Object.keys(PurchaseCategories).find(
                 k => PurchaseCategories[k] === key
               );
-              const value = PurchaseCategories[categoryKey] || key;
               return (
                 <th
                   key={key}
@@ -109,7 +108,7 @@ function TransactionList(props) {
                 >
                   <div className="flex flex-row justify-center">
                     <CategoryHeader
-                      category={value}
+                      category={key}
                       sortBy={sortBy}
                       sort={sort}
                       onChangeSort={handleSort}
@@ -129,24 +128,17 @@ function TransactionList(props) {
                 className={idx % 2 === 0 ? "bg-gray-100" : ""}
               >
                 {keys.map(key => {
-                  const type = Model[key].type;
+                  const { type } = categories.find(({ name }) => name === key);
                   const value = transaction[key];
                   const category = Object.keys(PurchaseCategories).find(
                     k => PurchaseCategories[k] === key
                   );
-                  const output =
-                    (value !== undefined &&
-                      value !== 0 &&
-                      (type === "Number" ? toCurrency(value) : "")) ||
-                    (type === "Date" &&
-                      value.toLocaleString("de-DE", {
-                        dateStyle: "medium",
-                        timeStyle: "short"
-                      }));
+                  const isCategory = category !== undefined;
+                  const output = formatValue(value, type, isCategory);
                   return (
                     <td
                       key={key}
-                      className={`border px-2 py-1 text-center md:w-1/${
+                      className={`border px-4 py-2 text-center md:w-1/${
                         keys.length
                       } ${
                         category !== undefined
