@@ -1,28 +1,91 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { ArrowUpCircle, ArrowDownCircle } from "react-feather";
+import { ChevronDown, ChevronUp } from "react-feather";
 import { PurchaseCategories } from "../../consts";
 import { toCurrency } from "../../utils/numbers";
 
+const Model = {
+  createdAt: {
+    type: "Date"
+  },
+  [PurchaseCategories.CashPayment]: {
+    type: "Number"
+  },
+  [PurchaseCategories.Deposit]: {
+    type: "Number"
+  },
+  [PurchaseCategories.GiroTransfer]: {
+    type: "Number"
+  },
+  [PurchaseCategories.ReducedVAT]: {
+    type: "Number"
+  },
+  [PurchaseCategories.VAT]: {
+    type: "Number"
+  },
+  total: {
+    type: "Number"
+  }
+};
+
+function CategoryHeader(props) {
+  const { category, sortBy, sort, onChangeSort, onChangeSortBy } = props;
+  const { t } = useTranslation(["transaction", "purchase"]);
+
+  const handleSort = () => {
+    onChangeSort && onChangeSort();
+  };
+
+  const handleSortBy = () => {
+    onChangeSortBy && onChangeSortBy(category);
+  };
+
+  const value =
+    t(category) === category ? t(`purchase:${category}`) : t(category);
+
+  return sortBy === category ? (
+    <>
+      {value}
+      <button className="focus:outline-none ml-2" onClick={handleSort}>
+        {sort > 0 ? <ChevronDown size="24" /> : <ChevronUp size="24" />}
+      </button>
+    </>
+  ) : (
+    <button className="focus:outline-none font-bold" onClick={handleSortBy}>
+      {value}
+    </button>
+  );
+}
+
 function TransactionList(props) {
   const { transactions = [] } = props;
-  const categories = Object.keys(PurchaseCategories).sort((a, b) =>
-    a.localeCompare(b)
-  );
-  const keys = ["createdAt", ...categories, "total"];
-  const { t } = useTranslation(["transaction", "purchase"]);
+
+  const keys = Object.keys(Model);
   const [sort, setSort] = useState(1);
-  const sortBy = "createdAt";
+  const [sortBy, setSortBy] = useState("createdAt");
+
+  useEffect(() => {
+    setSort(1);
+  }, [sortBy]);
 
   const handleSort = () => {
     setSort(sort < 0 ? 1 : -1);
   };
 
+  const handleSortBy = category => {
+    setSortBy(category);
+  };
+
   const sortedTransactions = transactions.sort((a, b) => {
-    if (sort < 0) {
-      return new Date(a[sortBy]) - new Date(b[sortBy]);
+    const valA = sort < 0 ? a[sortBy] : b[sortBy];
+    const valB = sort < 0 ? b[sortBy] : a[sortBy];
+
+    switch (Model[sortBy].type) {
+      case "Date":
+        return new Date(valA) - new Date(valB);
+      default:
+        return (valA || 0) - (valB || 0);
     }
-    return new Date(b[sortBy]) - new Date(a[sortBy]);
   });
 
   return (
@@ -31,27 +94,27 @@ function TransactionList(props) {
         <thead>
           <tr>
             {keys.map(key => {
-              const category = PurchaseCategories[key];
-              const value = category || key;
+              const categoryKey = Object.keys(PurchaseCategories).find(
+                k => PurchaseCategories[k] === key
+              );
+              const value = PurchaseCategories[categoryKey] || key;
               return (
                 <th
                   key={key}
                   className={`p-4 py-2 ${
-                    category !== undefined
+                    categoryKey !== undefined
                       ? "invisible md:visible"
-                      : `w-1/2 md:w-1/${categories.length + 2}`
-                    }`.trimRight()}
+                      : `w-1/2 md:w-1/${keys.length}`
+                  }`.trimRight()}
                 >
                   <div className="flex flex-row justify-center">
-                    {sortBy === value && (
-                      <button
-                        className="mr-2 focus:outline-none"
-                        onClick={handleSort}
-                      >
-                        {sort > 0 ? <ArrowDownCircle /> : <ArrowUpCircle />}
-                      </button>
-                    )}
-                    {t(value) === value ? t(`purchase:${value}`) : t(value)}
+                    <CategoryHeader
+                      category={value}
+                      sortBy={sortBy}
+                      sort={sort}
+                      onChangeSort={handleSort}
+                      onChangeSortBy={handleSortBy}
+                    />
                   </div>
                 </th>
               );
@@ -60,33 +123,41 @@ function TransactionList(props) {
         </thead>
         <tbody>
           {sortedTransactions.map((transaction, idx) => {
-            const { createdAt, total } = transaction;
             return (
               <tr
                 key={`transaction-${idx}`}
                 className={idx % 2 === 0 ? "bg-gray-100" : ""}
               >
-                <td className="border px-4 py-2 text-center">
-                  {createdAt.toLocaleString("de-DE", {
-                    dateStyle: "medium",
-                    timeStyle: "short"
-                  })}
-                </td>
-                {categories.map(category => {
-                  const value = transaction[PurchaseCategories[category]];
+                {keys.map(key => {
+                  const type = Model[key].type;
+                  const value = transaction[key];
+                  const category = Object.keys(PurchaseCategories).find(
+                    k => PurchaseCategories[k] === key
+                  );
+                  const output =
+                    (value !== undefined &&
+                      value !== 0 &&
+                      (type === "Number" ? toCurrency(value) : "")) ||
+                    (type === "Date" &&
+                      value.toLocaleString("de-DE", {
+                        dateStyle: "medium",
+                        timeStyle: "short"
+                      }));
                   return (
                     <td
-                      key={category}
-                      className={`border px-4 py-2 text-center invisible md:visible md:w-1/${categories.length +
-                        2}`}
+                      key={key}
+                      className={`border px-2 py-1 text-center md:w-1/${
+                        keys.length
+                      } ${
+                        category !== undefined
+                          ? "invisible md:visible"
+                          : "w-1/2"
+                      }`.trimRight()}
                     >
-                      {value !== undefined && value !== 0 ? toCurrency(value) : ""}
+                      {output}
                     </td>
                   );
                 })}
-                <td className="border px-4 py-2 text-center">
-                  {toCurrency(total)}
-                </td>
               </tr>
             );
           })}
