@@ -53,14 +53,14 @@ Button.propTypes = {
   onClick: PropTypes.func.isRequired,
   color: PropTypes.string,
   textColor: PropTypes.string,
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
 };
 
 Button.defaultProps = {
   color: "gray",
   textColor: "black",
   disabled: false,
-  focus: false
+  focus: false,
 };
 
 export default Button;

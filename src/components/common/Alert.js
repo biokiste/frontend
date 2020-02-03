@@ -3,7 +3,7 @@ import React, {
   useReducer,
   useContext,
   useRef,
-  useEffect
+  useEffect,
 } from "react";
 import { AlertSeverity } from "../../consts";
 
@@ -34,12 +34,13 @@ function AlertProvider(props) {
     alertReducer,
     (defaultState && { ...initialState, ...defaultState }) || initialState
   );
-  const showAlert = (message, severity) => dispatch({ type: "SHOW", message, severity });
+  const showAlert = (message, severity) =>
+    dispatch({ type: "SHOW", message, severity });
   const hideAlert = () => dispatch({ type: "HIDE" });
   const value = {
     ...state,
     showAlert,
-    hideAlert
+    hideAlert,
   };
   return (
     <AlertContext.Provider value={value}>
@@ -69,7 +70,11 @@ function Alert() {
     hideAlert();
   };
 
-  const color = Object.keys(AlertSeverity).some(key => severity === AlertSeverity[key]) ? severity : "gray";
+  const color = Object.keys(AlertSeverity).some(
+    key => severity === AlertSeverity[key]
+  )
+    ? severity
+    : "gray";
 
   return show ? (
     <div className="fixed w-screen h-screen bg-black-translucent p-2 flex items-end sm:items-center justify-center">
