@@ -32,7 +32,7 @@ function useCategories() {
         const options = {
           method: "GET",
           headers: header,
-          redirect: "follow"
+          redirect: "follow",
         };
         const res = await fetch("/api/transactions/types", options);
         const { data } = await res.json();
@@ -42,14 +42,14 @@ function useCategories() {
             return {
               id,
               name,
-              type: "Number"
+              type: "Number",
             };
           })
           .filter(category => !!category.name);
         setCategories([
           { name: "createdAt", type: "Date" },
           ...categories,
-          { name: "total", type: "Number" }
+          { name: "total", type: "Number" },
         ]);
       } catch (err) {
         showAlert(err.message);
@@ -60,6 +60,115 @@ function useCategories() {
   return categories;
 }
 
+function parseData(data) {
+  const { transactions } = data;
+  let total = 0;
+  return transactions
+    .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+    .map(({ amount, created_at, type }, idx) => {
+      const category = getCategoryName(type);
+      total += amount;
+      [PurchaseCategories.VAT, PurchaseCategories.ReducedVAT].some(
+        item => item === category
+      ) && (amount *= -1);
+      return {
+        createdAt: new Date(created_at),
+        [category]: amount,
+        total,
+      };
+    });
+}
+
+function useUserTransactions() {
+  const [balance, setBalance] = useState(0);
+  const [transactions, setTransactions] = useState([]);
+  const { showAlert } = useAlert();
+  const categories = useCategories();
+  useEffect(() => {
+    async function getTransactions() {
+      try {
+        const header = new Headers();
+        header.append("Authorization", `Bearer ${process.env.TOKEN}`);
+        const options = {
+          method: "GET",
+          headers: header,
+          redirect: "follow",
+        };
+        const res = await fetch(
+          `/api/transactions/user/${process.env.USER_ID}`,
+          options
+        );
+        const json = await res.json();
+
+        setBalance(json.data.balance);
+        setTransactions(parseData(json.data));
+      } catch (err) {
+        // TODO: Create application error
+        showAlert(err.message);
+        console.error(err);
+      }
+    }
+    if (categories.length !== 0) {
+      getTransactions();
+    }
+  }, [categories]); // eslint-disable-line
+
+  const addTransaction = async transaction => {
+    try {
+      const { createdAt } = transaction;
+      const items = [];
+      Object.keys(transaction).forEach(key => {
+        if (key === "createdAt" || key === "total") {
+          return;
+        }
+        if (transaction[key] > 0) {
+          const { id } = categories.find(category => category.name === key);
+
+          items.push({
+            category_id: id,
+            status: 1,
+            created_at: createdAt
+              .toISOString()
+              .slice(0, 19)
+              .replace("T", " "),
+            amount: [
+              PurchaseCategories.VAT,
+              PurchaseCategories.ReducedVAT,
+            ].some(item => item === key)
+              ? transaction[key] * -1
+              : transaction[key],
+          });
+        }
+      });
+      const header = new Headers();
+      header.append("Authorization", `Bearer ${process.env.TOKEN}`);
+      header.append("Accept", "application/json");
+      header.append("Content-Type", "application/json");
+      const options = {
+        method: "POST",
+        headers: header,
+        redirect: "follow",
+      };
+      const res = await fetch("/api/transaction", {
+        ...options,
+        body: JSON.stringify({
+          user: { id: parseInt(process.env.USER_ID) },
+          transactions: items,
+        }),
+      });
+      const { data } = await res.json();
+      setBalance(data.balance);
+      setTransactions(transactions.concat([transaction]));
+    } catch (err) {
+      // TODO: Create application error
+      showAlert(err.message);
+      console.error(err);
+    }
+  };
+
+  return { balance, transactions, addTransaction };
+}
+
 function getNewBalance(balance, item) {
   return (
     balance +
@@ -68,7 +177,7 @@ function getNewBalance(balance, item) {
         [
           PurchaseCategories.CashPayment,
           PurchaseCategories.GiroTransfer,
-          PurchaseCategories.Deposit
+          PurchaseCategories.Deposit,
         ].some(cat => cat === category)
       ) {
         sum += item[category].sum;
@@ -81,26 +190,22 @@ function getNewBalance(balance, item) {
 }
 
 function Purchase() {
-  const [balance, setBalance] = useState(0);
-  const [transactions, setTransactions] = useState([]);
+  const { balance, transactions, addTransaction } = useUserTransactions();
   const categories = useCategories();
 
   const onSubmit = item => {
     const newBalance = getNewBalance(balance, item);
-    setTransactions(
-      transactions.concat([
-        {
-          ...Object.keys(item).reduce(
-            (obj, category) => ({ ...obj, [category]: item[category].sum }),
-            {}
-          ),
-          createdAt: new Date(),
-          total: newBalance
-        }
-      ])
-    );
-    setBalance(newBalance);
+    const transaction = {
+      ...Object.keys(item).reduce(
+        (obj, category) => ({ ...obj, [category]: item[category].sum }),
+        {}
+      ),
+      createdAt: new Date(),
+      total: newBalance,
+    };
+    addTransaction(transaction);
   };
+
   return (
     <>
       <PurchaseContainer onSubmit={onSubmit} accountBalance={balance} />

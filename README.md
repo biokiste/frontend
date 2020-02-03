@@ -2,6 +2,15 @@
 
 ![Build Status](https://github.com/biokiste/frontend/workflows/Build/badge.svg)
 
+# Environment Variables
+
+To test reading and adding transactions during Rebuild create a `.env` file and add following variables:
+
+```
+TOKEN=token # apikey from backend
+USER_ID=userId # an user id
+```
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

@@ -30,3 +30,6 @@ yarn-error.log*
 
 # tailwindcss
 /src/styles/index.css
+
+# environment
+.env
