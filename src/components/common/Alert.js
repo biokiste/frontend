@@ -77,7 +77,7 @@ function Alert() {
     : "gray";
 
   return show ? (
-    <div className="fixed w-screen h-screen bg-black-translucent p-2 flex items-end sm:items-center justify-center">
+    <div className="fixed w-screen h-screen bg-black-translucent p-2 flex items-end sm:items-center justify-center z-10">
       <div className="w-full max-h-full sm:w-auto sm:max-w-sm md:max-w-md bg-white rounded flex justify-center flex-wrap shadow-lg p-2 overflow-scroll">
         <div className="w-full my-4 mx-2 text-center">{message}</div>
         <div className="w-full">
