@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, ChevronUp } from "react-feather";
-
-const userDataCategories = ["firstname", "lastname", "email", "mobile"];
+import Fuse from 'fuse.js';
 
 function CategoryHeader(props) {
   const {
@@ -24,8 +23,6 @@ function CategoryHeader(props) {
     onChangeSortBy && onChangeSortBy(category);
   };
 
-  console.log("sortBy", sortBy, "category", category);
-
   return sortBy === category ? (
     <>
       {t(category)}
@@ -34,25 +31,44 @@ function CategoryHeader(props) {
       </button>
     </>
   ) : (
-    <button className="focus:outline-none font-bold" onClick={handleSortBy}>
-      {t(category)}
-    </button>
-  );
+      <button className="focus:outline-none font-bold" onClick={handleSortBy}>
+        {t(category)}
+      </button>
+    );
 }
 
 function MembersList(props) {
-  const { members = [] } = props;
+  const { members = [], categories = [], searchString = "" } = props;
 
   const [sort, setSort] = useState(1);
-  const [sortBy, setSortBy] = useState(userDataCategories[0]);
+  const [sortBy, setSortBy] = useState(categories[0]);
+  const [result, setResult] = useState(members);
+  const fuse = useRef();
 
   useEffect(() => {
     setSort(1);
   }, [sortBy]);
 
   useEffect(() => {
-    setSortBy(userDataCategories[0]);
-  }, []);
+    setSortBy(categories[0]);
+  }, [categories]);
+
+  useEffect(() => {
+    fuse.current = new Fuse(members, {
+      keys: categories,
+      minMatchCharLength: 2,
+    });
+  }, [members, categories]);
+
+  useEffect(() => {
+    if (searchString !== "" && fuse.current !== undefined) {
+      const result = fuse.current.search(searchString);
+      setResult(result);
+    } else {
+      setResult(members);
+    }
+  }, [searchString, members]);
+
 
   const handleSort = () => {
     setSort(sort < 0 ? 1 : -1);
@@ -64,8 +80,8 @@ function MembersList(props) {
 
   const smCategories = ["firstname", "lastname"];
 
-  const sorted = members.sort((a, b) => {
-    const category = userDataCategories.find(k => k === sortBy);
+  const sorted = result.sort((a, b) => {
+    const category = categories.find(k => k === sortBy);
 
     if (!category) {
       return 0;
@@ -87,7 +103,7 @@ function MembersList(props) {
       <table className="table-fixed w-full">
         <thead>
           <tr>
-            {userDataCategories.map(category => {
+            {categories.map(category => {
               const isSmCategory = smCategories.some(k => k === category);
               return (
                 <th
@@ -95,8 +111,8 @@ function MembersList(props) {
                   className={`${
                     !isSmCategory
                       ? "invisible md:visible"
-                      : `w-1/${smCategories.length} md:w-1/${userDataCategories.length} px-4 py-2`
-                  }`}
+                      : `w-1/${smCategories.length} md:w-1/${categories.length} px-4 py-2`
+                    }`}
                 >
                   <div className="flex flex-row justify-center truncate">
                     <CategoryHeader
@@ -120,18 +136,18 @@ function MembersList(props) {
                 key={`members-${idx}`}
                 className={idx % 2 === 0 ? "bg-gray-100" : ""}
               >
-                {userDataCategories.map(category => {
+                {categories.map(category => {
                   const isSmCategory = smCategories.some(k => k === category);
                   return (
                     <td
                       key={category}
                       className={`border px-4 py-2 text-center truncate md:w-1/${
-                        userDataCategories.length
-                      } ${
+                        categories.length
+                        } ${
                         !isSmCategory
                           ? "invisible md:visible"
                           : `w-1/${smCategories.length}`
-                      }`.trimRight()}
+                        }`.trimRight()}
                     >
                       {member[category]}
                     </td>
