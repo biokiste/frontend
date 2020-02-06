@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, ChevronUp } from "react-feather";
 import Fuse from "fuse.js";
+import { getTextColor } from "../../utils/tailwind";
 
 function CategoryHeader(props) {
   const {
@@ -40,13 +41,13 @@ function CategoryHeader(props) {
 function MembersList(props) {
   const { members = [], categories = [], searchString = "" } = props;
 
-  const [sort, setSort] = useState(1);
+  const [sort, setSort] = useState(-1);
   const [sortBy, setSortBy] = useState(categories[0]);
   const [result, setResult] = useState(members);
   const fuse = useRef(null);
 
   useEffect(() => {
-    setSort(1);
+    setSort(-1);
   }, [sortBy]);
 
   useEffect(() => {
@@ -139,10 +140,16 @@ function MembersList(props) {
               >
                 {categories.map(category => {
                   const isSmCategory = smCategories.some(k => k === category);
+                  const inactive = member.state === 3;
+                  const former = member.state === 4;
+                  const textColor =
+                    inactive || former
+                      ? getTextColor("gray", former && "400")
+                      : getTextColor("black");
                   return (
                     <td
                       key={category}
-                      className={`border px-4 py-2 text-center truncate md:w-1/${
+                      className={`border px-4 py-2 ${textColor} text-center truncate md:w-1/${
                         categories.length
                       } ${
                         !isSmCategory

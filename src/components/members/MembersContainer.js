@@ -13,7 +13,10 @@ function SearchForm(props) {
     setValue(evt.target.value);
   };
 
-  const placeholder = categories.reduce((str, cur, idx) => `${str}${idx > 0 ? ", " : ""}${t(cur)}`, '');
+  const placeholder = categories.reduce(
+    (str, cur, idx) => `${str}${idx > 0 ? ", " : ""}${t(cur)}`,
+    ""
+  );
 
   const elements =
     children &&
@@ -31,7 +34,7 @@ function SearchForm(props) {
         onChange={handleChange}
         id="search"
         type="text"
-        autocomplete="off"
+        autoComplete="off"
         placeholder={placeholder}
       />
       {elements}
