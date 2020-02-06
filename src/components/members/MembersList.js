@@ -137,7 +137,7 @@ function MembersList(props) {
             name="hide inactive"
             checked={hideInactive}
           />
-          <label className="pointer-events-none" for="hide inactive">
+          <label className="pointer-events-none" htmlFor="hide inactive">
             {t("hide inactive")}
           </label>
         </button>
@@ -151,7 +151,7 @@ function MembersList(props) {
             name="hide former"
             checked={hideFormer}
           />
-          <label className="pointer-events-none" for="hide former">
+          <label className="pointer-events-none" htmlFor="hide former">
             {t("hide former")}
           </label>
         </button>
