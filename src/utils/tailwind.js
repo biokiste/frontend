@@ -5,6 +5,9 @@ function getColor(color, intensity = 500) {
   if (["white", "black"].some(item => item === color)) {
     return color;
   }
+  if (!intensity) {
+    intensity = 500;
+  }
   const validIntensity = Math.round(intensity / 100) * 100;
   return `${color}-${validIntensity}`;
 }
