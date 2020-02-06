@@ -43,7 +43,7 @@ function MembersList(props) {
   const [sort, setSort] = useState(1);
   const [sortBy, setSortBy] = useState(categories[0]);
   const [result, setResult] = useState(members);
-  const fuse = useRef();
+  const fuse = useRef(null);
 
   useEffect(() => {
     setSort(1);
@@ -54,21 +54,22 @@ function MembersList(props) {
   }, [categories]);
 
   useEffect(() => {
-    fuse.current = new Fuse(members, {
-      keys: categories,
-      minMatchCharLength: 2,
-    });
+    if (members.length > 0) {
+      fuse.current = new Fuse(members, {
+        keys: categories,
+        minMatchCharLength: 2,
+      });
+    }
   }, [members, categories]);
 
   useEffect(() => {
-    if (searchString !== "" && fuse.current !== undefined) {
+    if (searchString !== "" && fuse.current !== null && members.length > 0) {
       const result = fuse.current.search(searchString);
       setResult(result);
-    } else {
+    } else if (result.length !== members.length) {
       setResult(members);
     }
-  }, [searchString, members]);
-
+  }, [searchString, members, result]);
 
   const handleSort = () => {
     setSort(sort < 0 ? 1 : -1);
