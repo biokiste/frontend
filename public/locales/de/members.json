@@ -2,5 +2,7 @@
   "firstname": "Vorname",
   "lastname": "Nachname",
   "email": "E-Mail",
-  "mobile": "Telefon"
+  "mobile": "Telefon",
+  "hide former": "Ehemalige ausblenden",
+  "hide inactive": "Pausierte ausblenden"
 }

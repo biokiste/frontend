@@ -30,7 +30,7 @@ function SearchForm(props) {
   return (
     <>
       <input
-        class="appearance-none border rounded-lg w-full mx-2 py-2 px-4 text-gray-700 focus:outline-none truncate"
+        className="appearance-none border rounded-lg w-full mx-2 py-2 px-4 text-gray-700 focus:outline-none truncate"
         onChange={handleChange}
         id="search"
         type="text"

@@ -43,8 +43,12 @@ function MembersList(props) {
 
   const [sort, setSort] = useState(-1);
   const [sortBy, setSortBy] = useState(categories[0]);
+  const [hideInactive, setHideInactive] = useState(true);
+  const [hideFormer, setHideFormer] = useState(true);
   const [result, setResult] = useState(members);
   const fuse = useRef(null);
+
+  const { t } = useTranslation("members");
 
   useEffect(() => {
     setSort(-1);
@@ -80,6 +84,14 @@ function MembersList(props) {
     setSortBy(category);
   };
 
+  const handleInactive = () => {
+    setHideInactive(!hideInactive);
+  };
+
+  const handleFormer = () => {
+    setHideFormer(!hideFormer);
+  };
+
   const smCategories = ["firstname", "lastname"];
 
   const sorted = result.sort((a, b) => {
@@ -100,8 +112,47 @@ function MembersList(props) {
     return (valA || 0) - (valB || 0);
   });
 
+  const filtered = sorted.filter(member => {
+    const inactive = member.state === 3;
+    const former = member.state === 4;
+    if ((hideInactive && inactive) || (hideFormer && former)) {
+      return false;
+    }
+    return true;
+  });
+
   return (
     <div className="w-full p-2">
+      <div className="w-full flex flex-wrap flex-row justify-around my-2">
+        <button
+          className="w-full sm:w-1/2 flex justify-center items-center focus:outline-none"
+          onClick={handleInactive}
+        >
+          <input
+            className="mr-2 pointer-events-none"
+            type="checkbox"
+            name="hide inactive"
+            checked={hideInactive}
+          />
+          <label className="pointer-events-none" for="hide inactive">
+            {t("hide inactive")}
+          </label>
+        </button>
+        <button
+          className="w-full sm:w-1/2 flex justify-center items-center focus:outline-none"
+          onClick={handleFormer}
+        >
+          <input
+            className="mr-2 pointer-events-none"
+            type="checkbox"
+            name="hide former"
+            checked={hideFormer}
+          />
+          <label className="pointer-events-none" for="hide former">
+            {t("hide former")}
+          </label>
+        </button>
+      </div>
       <table className="table-fixed w-full">
         <thead>
           <tr>
@@ -132,7 +183,7 @@ function MembersList(props) {
           </tr>
         </thead>
         <tbody>
-          {sorted.map((member, idx) => {
+          {filtered.map((member, idx) => {
             return (
               <tr
                 key={`members-${idx}`}
