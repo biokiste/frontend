@@ -69,7 +69,7 @@ function MembersList(props) {
     } else if (result.length !== members.length) {
       setResult(members);
     }
-  }, [searchString, members, result]);
+  }, [searchString, members]); // eslint-disable-line
 
   const handleSort = () => {
     setSort(sort < 0 ? 1 : -1);
