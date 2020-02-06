@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, ChevronUp } from "react-feather";
-import Fuse from 'fuse.js';
+import Fuse from "fuse.js";
 
 function CategoryHeader(props) {
   const {
@@ -31,10 +31,10 @@ function CategoryHeader(props) {
       </button>
     </>
   ) : (
-      <button className="focus:outline-none font-bold" onClick={handleSortBy}>
-        {t(category)}
-      </button>
-    );
+    <button className="focus:outline-none font-bold" onClick={handleSortBy}>
+      {t(category)}
+    </button>
+  );
 }
 
 function MembersList(props) {
@@ -113,7 +113,7 @@ function MembersList(props) {
                     !isSmCategory
                       ? "invisible md:visible"
                       : `w-1/${smCategories.length} md:w-1/${categories.length} px-4 py-2`
-                    }`}
+                  }`}
                 >
                   <div className="flex flex-row justify-center truncate">
                     <CategoryHeader
@@ -144,11 +144,11 @@ function MembersList(props) {
                       key={category}
                       className={`border px-4 py-2 text-center truncate md:w-1/${
                         categories.length
-                        } ${
+                      } ${
                         !isSmCategory
                           ? "invisible md:visible"
                           : `w-1/${smCategories.length}`
-                        }`.trimRight()}
+                      }`.trimRight()}
                     >
                       {member[category]}
                     </td>
