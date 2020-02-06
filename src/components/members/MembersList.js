@@ -26,8 +26,11 @@ function CategoryHeader(props) {
 
   return sortBy === category ? (
     <>
-      {t(category)}
-      <button className="focus:outline-none ml-2" onClick={handleSort}>
+      <button
+        className="focus:outline-none flex flex-row font-bold"
+        onClick={handleSort}
+      >
+        <div className="mr-2">{t(category)}</div>
         {sort > 0 ? <ChevronDown size="24" /> : <ChevronUp size="24" />}
       </button>
     </>
