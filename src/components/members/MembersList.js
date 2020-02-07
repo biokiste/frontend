@@ -42,14 +42,14 @@ function CategoryHeader(props) {
   );
 }
 
-const memberFilterOptions = ["active", "inactive", "former"];
+const memberFilterOptions = ["all", "active", "inactive", "former"];
 
 function MembersList(props) {
   const { members = [], categories = [], searchString = "" } = props;
 
   const [sort, setSort] = useState(-1);
   const [sortBy, setSortBy] = useState(categories[0]);
-  const [memberFilter, setMemberFilter] = useState(memberFilterOptions[0]);
+  const [memberFilter, setMemberFilter] = useState(null);
   const [result, setResult] = useState(members);
   const fuse = useRef(null);
 
@@ -88,7 +88,9 @@ function MembersList(props) {
   };
 
   const handleMemberFilterChange = type => {
-    setMemberFilter(type);
+    if (type !== undefined) {
+      setMemberFilter(type);
+    }
   };
 
   const smCategories = ["firstname", "lastname"];
@@ -123,7 +125,7 @@ function MembersList(props) {
       case "active":
         return active;
       default:
-        return false;
+        return true;
     }
   });
 
@@ -134,6 +136,7 @@ function MembersList(props) {
           options={memberFilterOptions}
           onChange={handleMemberFilterChange}
           translationKey="members"
+          selected="active"
         />
       </div>
       <table className="table-fixed w-full">
