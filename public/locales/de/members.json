@@ -3,6 +3,7 @@
   "lastname": "Nachname",
   "email": "E-Mail",
   "mobile": "Telefon",
-  "hide former": "Ehemalige ausblenden",
-  "hide inactive": "Pausierte ausblenden"
+  "former": "ausgetreten",
+  "inactive": "pausierend",
+  "active": "aktiv"
 }

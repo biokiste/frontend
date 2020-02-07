@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ChevronDown, ChevronUp } from "react-feather";
 import Fuse from "fuse.js";
 import { getTextColor } from "../../utils/tailwind";
+import Select from "../common/Select";
 
 function CategoryHeader(props) {
   const {
@@ -41,17 +42,16 @@ function CategoryHeader(props) {
   );
 }
 
+const memberFilterOptions = ["active", "inactive", "former"];
+
 function MembersList(props) {
   const { members = [], categories = [], searchString = "" } = props;
 
   const [sort, setSort] = useState(-1);
   const [sortBy, setSortBy] = useState(categories[0]);
-  const [hideInactive, setHideInactive] = useState(true);
-  const [hideFormer, setHideFormer] = useState(true);
+  const [memberFilter, setMemberFilter] = useState(memberFilterOptions[0]);
   const [result, setResult] = useState(members);
   const fuse = useRef(null);
-
-  const { t } = useTranslation("members");
 
   useEffect(() => {
     setSort(-1);
@@ -87,12 +87,8 @@ function MembersList(props) {
     setSortBy(category);
   };
 
-  const handleInactive = () => {
-    setHideInactive(!hideInactive);
-  };
-
-  const handleFormer = () => {
-    setHideFormer(!hideFormer);
+  const handleMemberFilterChange = type => {
+    setMemberFilter(type);
   };
 
   const smCategories = ["firstname", "lastname"];
@@ -116,45 +112,29 @@ function MembersList(props) {
   });
 
   const filtered = sorted.filter(member => {
+    const active = member.state === 2;
     const inactive = member.state === 3;
     const former = member.state === 4;
-    if ((hideInactive && inactive) || (hideFormer && former)) {
-      return false;
+    switch (memberFilter) {
+      case "inactive":
+        return inactive;
+      case "former":
+        return former;
+      case "active":
+        return active;
+      default:
+        return false;
     }
-    return true;
   });
 
   return (
     <div className="w-full p-2">
-      <div className="w-full flex flex-wrap flex-row justify-around my-2">
-        <button
-          className="w-full sm:w-1/2 flex justify-center items-center focus:outline-none"
-          onClick={handleInactive}
-        >
-          <input
-            className="mr-2 pointer-events-none"
-            type="checkbox"
-            name="hide inactive"
-            checked={hideInactive}
-          />
-          <label className="pointer-events-none" htmlFor="hide inactive">
-            {t("hide inactive")}
-          </label>
-        </button>
-        <button
-          className="w-full sm:w-1/2 flex justify-center items-center focus:outline-none"
-          onClick={handleFormer}
-        >
-          <input
-            className="mr-2 pointer-events-none"
-            type="checkbox"
-            name="hide former"
-            checked={hideFormer}
-          />
-          <label className="pointer-events-none" htmlFor="hide former">
-            {t("hide former")}
-          </label>
-        </button>
+      <div className="w-full flex flex-wrap flex-row justify-left my-2">
+        <Select
+          options={memberFilterOptions}
+          onChange={handleMemberFilterChange}
+          translationKey="members"
+        />
       </div>
       <table className="table-fixed w-full">
         <thead>
