@@ -133,6 +133,7 @@ function MembersList(props) {
     <div className="w-full p-2">
       <div className="w-full flex flex-wrap flex-row justify-left my-2">
         <Select
+          title="Members"
           options={memberFilterOptions}
           onChange={handleMemberFilterChange}
           translationKey="members"
