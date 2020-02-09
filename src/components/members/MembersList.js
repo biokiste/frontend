@@ -42,10 +42,13 @@ function CategoryHeader(props) {
   );
 }
 
-const memberFilterOptions = ["all", "active", "inactive", "former"];
-
 function MembersList(props) {
-  const { members = [], categories = [], searchString = "" } = props;
+  const {
+    members = [],
+    categories = [],
+    searchString = "",
+    memberStates,
+  } = props;
 
   const [sort, setSort] = useState(-1);
   const [sortBy, setSortBy] = useState(categories[0]);
@@ -114,27 +117,20 @@ function MembersList(props) {
   });
 
   const filtered = sorted.filter(member => {
-    const active = member.state === 2;
-    const inactive = member.state === 3;
-    const former = member.state === 4;
-    switch (memberFilter) {
-      case "inactive":
-        return inactive;
-      case "former":
-        return former;
-      case "active":
-        return active;
-      default:
-        return true;
-    }
+    const { key } = memberStates.find(option => option.id === member.state);
+    return key === memberFilter || memberFilter === "all";
   });
+
+  const memberStateKeys = memberStates
+    .map(option => option.key)
+    .concat(["all"]);
 
   return (
     <div className="w-full p-2">
       <div className="w-full flex flex-wrap flex-row justify-left my-2">
         <Select
           title="Members"
-          options={memberFilterOptions}
+          options={memberStateKeys}
           onChange={handleMemberFilterChange}
           translationKey="members"
           selected="active"
@@ -178,7 +174,7 @@ function MembersList(props) {
               >
                 {categories.map(category => {
                   const isSmCategory = smCategories.some(k => k === category);
-                  const inactive = member.state === 3;
+                  const inactive = member.state === 6;
                   const former = member.state === 4;
                   const textColor =
                     inactive || former

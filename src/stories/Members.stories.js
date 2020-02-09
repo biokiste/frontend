@@ -33,18 +33,31 @@ const members = [
     lastname: "Solo",
     email: "han@milleniumfalcon.org",
     mobile: "+19 77 1307 1942",
-    state: 3,
+    state: 6,
   },
+];
+
+const memberStates = [
+  { id: 1, key: "new" },
+  { id: 2, key: "active" },
+  { id: 3, key: "blocked" },
+  { id: 4, key: "former" },
+  { id: 5, key: "deleted" },
+  { id: 6, key: "paused" },
 ];
 
 storiesOf("Members|MembersList", module)
   .add("default", () => {
-    return <MembersList categories={categories} />;
+    return <MembersList categories={categories} memberStates={memberStates} />;
   })
   .add("with data", () => {
     return (
       <div className="container mx-auto p-2 flex flex-row flex-wrap">
-        <MembersList members={members} categories={categories} />
+        <MembersList
+          members={members}
+          categories={categories}
+          memberStates={memberStates}
+        />
       </div>
     );
   })
@@ -54,6 +67,7 @@ storiesOf("Members|MembersList", module)
         <MembersList
           members={members}
           categories={categories}
+          memberStates={memberStates}
           searchString="Ana"
         />
       </div>
@@ -63,7 +77,7 @@ storiesOf("Members|MembersList", module)
 storiesOf("Members|MembersContainer", module).add("default", () => {
   return (
     <div className="container mx-auto p-2 flex flex-row flex-wrap">
-      <MembersContainer members={members} />
+      <MembersContainer members={members} memberStates={memberStates} />
     </div>
   );
 });

@@ -4,8 +4,11 @@
   "email": "E-Mail",
   "mobile": "Telefon",
   "former": "ausgetreten",
-  "inactive": "pausierend",
+  "paused": "pausierend",
   "active": "aktiv",
+  "new": "neu",
+  "deleted": "gelöscht",
+  "blocked": "gesperrt",
   "all": "alle",
   "Members": "Mitglieder"
 }
