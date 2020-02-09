@@ -46,6 +46,7 @@ function MembersList(props) {
   const {
     members = [],
     categories = [],
+    teams,
     searchString = "",
     memberStates,
   } = props;
@@ -53,6 +54,7 @@ function MembersList(props) {
   const [sort, setSort] = useState(-1);
   const [sortBy, setSortBy] = useState(categories[0]);
   const [memberFilter, setMemberFilter] = useState(null);
+  const [teamFilter, setTeamFilter] = useState(null);
   const [result, setResult] = useState(members);
   const fuse = useRef(null);
 
@@ -96,6 +98,12 @@ function MembersList(props) {
     }
   };
 
+  const handleTeamFilterChange = type => {
+    if (type !== undefined) {
+      setTeamFilter(type);
+    }
+  };
+
   const smCategories = ["firstname", "lastname"];
 
   const sorted = result.sort((a, b) => {
@@ -116,24 +124,38 @@ function MembersList(props) {
     return (valA || 0) - (valB || 0);
   });
 
-  const filtered = sorted.filter(member => {
-    const { key } = memberStates.find(option => option.id === member.state);
-    return key === memberFilter || memberFilter === "all";
-  });
+  const filtered = sorted
+    .filter(member => {
+      const { key } = memberStates.find(option => option.id === member.state);
+      return key === memberFilter || memberFilter === "all";
+    })
+    .filter(member => {
+      const { name } = teams.find(option => option.id === member.group_id);
+      return name === teamFilter || teamFilter === "all";
+    });
 
   const memberStateKeys = memberStates
     .map(option => option.key)
     .concat(["all"]);
 
+  const teamKeys = teams.map(option => option.name).concat(["all"]);
+
   return (
     <div className="w-full p-2">
-      <div className="w-full flex flex-wrap flex-row justify-left my-2">
+      <div className="w-full flex flex-wrap flex-row justify-between my-2">
         <Select
           title="Members"
           options={memberStateKeys}
           onChange={handleMemberFilterChange}
           translationKey="members"
           selected="active"
+        />
+        <Select
+          title="Teams"
+          options={teamKeys}
+          onChange={handleTeamFilterChange}
+          translationKey="members"
+          selected="all"
         />
       </div>
       <table className="table-fixed w-full">

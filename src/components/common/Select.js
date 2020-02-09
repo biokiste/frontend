@@ -22,7 +22,7 @@ function Select(props) {
   }, [current, onChange]);
 
   return (
-    <div className="w-full flex flex-row items-center justify-end">
+    <div className="flex flex-row items-center justify-end">
       <p className="w-auto mr-2">{t(title)}:</p>
       <div className="relative border border-gray-500 rounded-lg flex flex-row items-center">
         <select

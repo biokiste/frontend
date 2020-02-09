@@ -9,6 +9,11 @@
   "new": "neu",
   "deleted": "gelöscht",
   "blocked": "gesperrt",
+  "finance": "Finanzen",
+  "purchase": "Bestellen",
+  "web": "Website",
+  "none": "ohne",
   "all": "alle",
-  "Members": "Mitglieder"
+  "Members": "Mitglieder",
+  "Teams": "Teams"
 }
