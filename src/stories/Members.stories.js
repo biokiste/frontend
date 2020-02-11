@@ -79,11 +79,7 @@ const groups = [
 storiesOf("Members|MembersList", module)
   .add("default", () => {
     return (
-      <MembersList
-        categories={categories}
-        memberStates={memberStates}
-        groupTypes={groupTypes}
-      />
+      <MembersList />
     );
   })
   .add("with data", () => {

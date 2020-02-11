@@ -48,8 +48,8 @@ function MembersList(props) {
     categories = [],
     groupTypes = [],
     groups = [],
+    memberStates = [],
     searchString = "",
-    memberStates,
   } = props;
 
   const [sort, setSort] = useState(-1);
