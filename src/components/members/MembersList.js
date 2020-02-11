@@ -1,6 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { ChevronDown, ChevronUp } from "react-feather";
+import {
+  ChevronDown,
+  ChevronUp,
+  Mail,
+  Phone,
+  Edit,
+  Trash2,
+} from "react-feather";
 import Fuse from "fuse.js";
 import { getTextColor } from "../../utils/tailwind";
 import Select from "../common/Select";
@@ -42,6 +49,81 @@ function CategoryHeader(props) {
   );
 }
 
+function MemberRow(props) {
+  const { index, member, categories, flipped: initialFlipped, onFlip } = props;
+  const [flipped, setFlipped] = useState(false);
+
+  useEffect(() => {
+    setFlipped(false);
+  }, [member]);
+
+  useEffect(() => {
+    if (flipped && flipped !== initialFlipped) {
+      onFlip && onFlip(index, flipped);
+    }
+  }, [flipped]); // eslint-disable-line
+
+  useEffect(() => {
+    if (initialFlipped !== flipped) {
+      setFlipped(initialFlipped);
+    }
+  }, [initialFlipped]); // eslint-disable-line
+
+  const handleClick = () => {
+    setFlipped(!flipped);
+  };
+
+  const smCategories = ["firstname", "lastname"];
+
+  return (
+    <tr
+      className={`cursor-pointer ${index % 2 === 0 ? "bg-gray-100" : ""}`}
+      onClick={handleClick}
+    >
+      {flipped ? (
+        <>
+          <td className="px-4 py-2 border">
+            <Phone className="m-auto" />
+          </td>
+          <td className="px-4 py-2 border">
+            <Mail className="m-auto" />
+          </td>
+          <td className="px-4 py-2 border invisible md:visible">
+            <Edit className="m-auto" />
+          </td>
+          <td className="px-4 py-2 border invisible md:visible">
+            <Trash2 className="m-auto" />
+          </td>
+        </>
+      ) : (
+        categories.map(category => {
+          const isSmCategory = smCategories.some(k => k === category);
+          const inactive = member.state === 6;
+          const former = member.state === 4;
+          const textColor =
+            inactive || former
+              ? getTextColor("gray", former && "400")
+              : getTextColor("black");
+          return (
+            <td
+              key={category}
+              className={`px-4 py-2 border ${textColor} text-center truncate md:w-1/${
+                categories.length
+              } ${
+                !isSmCategory
+                  ? "invisible md:visible"
+                  : `w-1/${smCategories.length}`
+              }`.trimRight()}
+            >
+              {member[category]}
+            </td>
+          );
+        })
+      )}
+    </tr>
+  );
+}
+
 function MembersList(props) {
   const {
     members = [],
@@ -57,6 +139,7 @@ function MembersList(props) {
   const [memberFilter, setMemberFilter] = useState(null);
   const [groupFilter, setGroupFilter] = useState(null);
   const [result, setResult] = useState(members);
+  const [flippedIndex, setFlippedIndex] = useState(-1);
   const fuse = useRef(null);
 
   useEffect(() => {
@@ -85,6 +168,10 @@ function MembersList(props) {
     }
   }, [searchString, members]); // eslint-disable-line
 
+  useEffect(() => {
+    setFlippedIndex(-1);
+  }, [sort, sortBy, memberFilter, groupFilter]);
+
   const handleSort = () => {
     setSort(sort < 0 ? 1 : -1);
   };
@@ -103,6 +190,10 @@ function MembersList(props) {
     if (type !== undefined) {
       setGroupFilter(type);
     }
+  };
+
+  const handleFlip = (index, flipped) => {
+    setFlippedIndex(flipped ? index : -1);
   };
 
   const smCategories = ["firstname", "lastname"];
@@ -208,34 +299,13 @@ function MembersList(props) {
         <tbody>
           {filtered.map((member, idx) => {
             return (
-              <tr
-                key={`members-${idx}`}
-                className={idx % 2 === 0 ? "bg-gray-100" : ""}
-              >
-                {categories.map(category => {
-                  const isSmCategory = smCategories.some(k => k === category);
-                  const inactive = member.state === 6;
-                  const former = member.state === 4;
-                  const textColor =
-                    inactive || former
-                      ? getTextColor("gray", former && "400")
-                      : getTextColor("black");
-                  return (
-                    <td
-                      key={category}
-                      className={`border px-4 py-2 ${textColor} text-center truncate md:w-1/${
-                        categories.length
-                      } ${
-                        !isSmCategory
-                          ? "invisible md:visible"
-                          : `w-1/${smCategories.length}`
-                      }`.trimRight()}
-                    >
-                      {member[category]}
-                    </td>
-                  );
-                })}
-              </tr>
+              <MemberRow
+                member={member}
+                index={idx}
+                categories={categories}
+                onFlip={handleFlip}
+                flipped={flippedIndex === idx}
+              />
             );
           })}
         </tbody>
