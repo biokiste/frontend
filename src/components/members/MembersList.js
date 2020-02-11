@@ -6,7 +6,7 @@ import {
   Mail,
   Phone,
   Edit,
-  Trash2,
+  DollarSign,
 } from "react-feather";
 import Fuse from "fuse.js";
 import { getTextColor } from "../../utils/tailwind";
@@ -101,10 +101,10 @@ function MemberRow(props) {
             </a>
           </td>
           <td className="border-0 text-center invisible md:visible">
-            <Edit className="inline" />
+            <DollarSign className="inline" />
           </td>
           <td className="border-0 text-center invisible md:visible">
-            <Trash2 className="inline" />
+            <Edit className="inline" />
           </td>
         </>
       ) : (
