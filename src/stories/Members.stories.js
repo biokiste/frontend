@@ -71,7 +71,7 @@ const teams = [
 
 storiesOf("Members|MembersList", module)
   .add("default", () => {
-    return <MembersList categories={categories} memberStates={memberStates} />;
+    return <MembersList categories={categories} memberStates={memberStates} teams={teams} />;
   })
   .add("with data", () => {
     return (
