@@ -77,22 +77,34 @@ function MemberRow(props) {
 
   return (
     <tr
-      className={`cursor-pointer ${index % 2 === 0 ? "bg-gray-100" : ""}`}
+      className={`cursor-pointer border h-12 ${
+        index % 2 === 0 ? "bg-gray-100" : ""
+      }`}
       onClick={handleClick}
     >
       {flipped ? (
         <>
-          <td className="px-4 py-2 border">
-            <Phone className="m-auto" />
+          <td className="border-0 text-center">
+            <a
+              href={`tel:${member.phone}`}
+              onClick={evt => evt.stopPropagation()}
+            >
+              <Phone className="inline" />
+            </a>
           </td>
-          <td className="px-4 py-2 border">
-            <Mail className="m-auto" />
+          <td className="border-0 text-center">
+            <a
+              href={`mailto:${member.email}`}
+              onClick={evt => evt.stopPropagation()}
+            >
+              <Mail className="inline" />
+            </a>
           </td>
-          <td className="px-4 py-2 border invisible md:visible">
-            <Edit className="m-auto" />
+          <td className="border-0 text-center invisible md:visible">
+            <Edit className="inline" />
           </td>
-          <td className="px-4 py-2 border invisible md:visible">
-            <Trash2 className="m-auto" />
+          <td className="border-0 text-center invisible md:visible">
+            <Trash2 className="inline" />
           </td>
         </>
       ) : (
