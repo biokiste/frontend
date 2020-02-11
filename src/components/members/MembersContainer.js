@@ -43,14 +43,15 @@ function SearchForm(props) {
 }
 
 function MembersContainer(props) {
-  const { members, memberStates, teams } = props;
+  const { members, memberStates, groups, groupTypes } = props;
   return (
     <>
       <SearchForm categories={userDataCategories} translationKey="members">
         <MembersList
           members={members}
           memberStates={memberStates}
-          teams={teams}
+          groups={groups}
+          groupTypes={groupTypes}
         />
       </SearchForm>
     </>

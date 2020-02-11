@@ -8,36 +8,36 @@ const categories = ["firstname", "lastname", "email", "mobile"];
 
 const members = [
   {
+    id: 1,
     firstname: "Anakin",
     lastname: "Skywalker",
     email: "vader@empire.gov",
     mobile: "+49 221 8282 9212",
     state: 4,
-    group_id: 6,
   },
   {
+    id: 2,
     firstname: "R2D2",
     lastname: "C3PO",
     email: "beeboop@yavin.org",
     mobile: "+01 010 1010 1010",
     state: 2,
-    group_id: 4,
   },
   {
+    id: 3,
     firstname: "Leia",
     lastname: "Skywalker",
     email: "princess@alderan.com",
     mobile: "+19 77 1021 1956",
     state: 2,
-    group_id: 4,
   },
   {
+    id: 4,
     firstname: "Han",
     lastname: "Solo",
     email: "han@milleniumfalcon.org",
     mobile: "+19 77 1307 1942",
     state: 6,
-    group_id: 13,
   },
 ];
 
@@ -50,7 +50,7 @@ const memberStates = [
   { id: 6, key: "paused" },
 ];
 
-const teams = [
+const groupTypes = [
   {
     id: 2,
     name: "finance",
@@ -69,18 +69,32 @@ const teams = [
   },
 ];
 
+const groups = [
+  { id: 2, user_ids: [], leader_ids: [] },
+  { id: 4, user_ids: [2, 3], leader_ids: [2] },
+  { id: 6, user_ids: [1], leader_ids: [3] },
+  { id: 13, user_ids: [4], leader_ids: [] },
+];
+
 storiesOf("Members|MembersList", module)
   .add("default", () => {
-    return <MembersList categories={categories} memberStates={memberStates} teams={teams} />;
+    return (
+      <MembersList
+        categories={categories}
+        memberStates={memberStates}
+        groupTypes={groupTypes}
+      />
+    );
   })
   .add("with data", () => {
     return (
       <div className="container mx-auto p-2 flex flex-row flex-wrap">
         <MembersList
           members={members}
-          teams={teams}
+          groupTypes={groupTypes}
           categories={categories}
           memberStates={memberStates}
+          groups={groups}
         />
       </div>
     );
@@ -90,9 +104,10 @@ storiesOf("Members|MembersList", module)
       <div className="container mx-auto p-2 flex flex-row flex-wrap">
         <MembersList
           members={members}
-          teams={teams}
+          groupTypes={groupTypes}
           categories={categories}
           memberStates={memberStates}
+          groups={groups}
           searchString="Ana"
         />
       </div>
@@ -105,7 +120,8 @@ storiesOf("Members|MembersContainer", module).add("default", () => {
       <MembersContainer
         members={members}
         memberStates={memberStates}
-        teams={teams}
+        groupTypes={groupTypes}
+        groups={groups}
       />
     </div>
   );

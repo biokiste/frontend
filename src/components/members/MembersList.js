@@ -46,7 +46,8 @@ function MembersList(props) {
   const {
     members = [],
     categories = [],
-    teams,
+    groupTypes = [],
+    groups = [],
     searchString = "",
     memberStates,
   } = props;
@@ -54,7 +55,7 @@ function MembersList(props) {
   const [sort, setSort] = useState(-1);
   const [sortBy, setSortBy] = useState(categories[0]);
   const [memberFilter, setMemberFilter] = useState(null);
-  const [teamFilter, setTeamFilter] = useState(null);
+  const [groupFilter, setGroupFilter] = useState(null);
   const [result, setResult] = useState(members);
   const fuse = useRef(null);
 
@@ -98,9 +99,9 @@ function MembersList(props) {
     }
   };
 
-  const handleTeamFilterChange = type => {
+  const handleGroupFilterChange = type => {
     if (type !== undefined) {
-      setTeamFilter(type);
+      setGroupFilter(type);
     }
   };
 
@@ -130,15 +131,19 @@ function MembersList(props) {
       return key === memberFilter || memberFilter === "all";
     })
     .filter(member => {
-      const { name } = teams.find(option => option.id === member.group_id);
-      return name === teamFilter || teamFilter === "all";
+      if (groupFilter === "all") {
+        return true;
+      }
+      const { id } = groupTypes.find(item => item.name === groupFilter);
+      const { user_ids: userIds } = groups.find(item => item.id === id);
+      return userIds.includes(member.id);
     });
 
   const memberStateKeys = memberStates
     .map(option => option.key)
     .concat(["all"]);
 
-  const teamKeys = teams.map(option => option.name).concat(["all"]);
+  const groupTypeKeys = groupTypes.map(option => option.name).concat(["all"]);
 
   return (
     <div className="w-full p-2">
@@ -151,9 +156,9 @@ function MembersList(props) {
           selected="active"
         />
         <Select
-          title="Teams"
-          options={teamKeys}
-          onChange={handleTeamFilterChange}
+          title="Groups"
+          options={groupTypeKeys}
+          onChange={handleGroupFilterChange}
           translationKey="members"
           selected="all"
         />
