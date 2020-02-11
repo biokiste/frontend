@@ -127,21 +127,34 @@ function MembersList(props) {
 
   const filtered = sorted
     .filter(member => {
+      if (memberFilter === "all") {
+        return true;
+      }
+      if (memberFilter === "leaders") {
+        const ids = groups.reduce((arr, group) => {
+          return arr.concat(group.leader_ids);
+        }, []);
+        return ids.includes(member.id);
+      }
       const { key } = memberStates.find(option => option.id === member.state);
-      return key === memberFilter || memberFilter === "all";
+      return key === memberFilter;
     })
     .filter(member => {
       if (groupFilter === "all") {
         return true;
       }
       const { id } = groupTypes.find(item => item.name === groupFilter);
-      const { user_ids: userIds } = groups.find(item => item.id === id);
-      return userIds.includes(member.id);
+      const { user_ids: userIds, leader_ids: leaderIds } = groups.find(
+        item => item.id === id
+      );
+      return memberFilter === "leaders"
+        ? leaderIds.includes(member.id)
+        : leaderIds.concat(userIds).includes(member.id);
     });
 
   const memberStateKeys = memberStates
     .map(option => option.key)
-    .concat(["all"]);
+    .concat(["leaders", "all"]);
 
   const groupTypeKeys = groupTypes.map(option => option.name).concat(["all"]);
 
