@@ -133,7 +133,12 @@ function MemberRow(props) {
                   : `w-1/${smCategories.length}`
               }`.trimRight()}
             >
-              <span className="cursor-text">{member[category]}</span>
+              <span
+                className="cursor-text"
+                onClick={evt => evt.stopPropagation()}
+              >
+                {member[category]}
+              </span>
             </td>
           );
         })
