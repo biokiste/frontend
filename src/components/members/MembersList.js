@@ -239,7 +239,7 @@ function MembersList(props) {
       if (memberFilter === "all") {
         return true;
       }
-      if (memberFilter === "leaders") {
+      if (memberFilter === "leading") {
         const ids = groups.reduce((arr, group) => {
           return arr.concat(group.leader_ids);
         }, []);
@@ -256,34 +256,38 @@ function MembersList(props) {
       const { user_ids: userIds, leader_ids: leaderIds } = groups.find(
         item => item.id === id
       );
-      return memberFilter === "leaders"
+      return memberFilter === "leading"
         ? leaderIds.includes(member.id)
         : leaderIds.concat(userIds).includes(member.id);
     });
 
   const memberStateKeys = memberStates
     .map(option => option.key)
-    .concat(["leaders", "all"]);
+    .concat(["leading", "all"]);
 
   const groupTypeKeys = groupTypes.map(option => option.name).concat(["all"]);
 
   return (
     <div className="w-full p-2">
       <div className="w-full flex flex-wrap flex-row justify-between my-2">
-        <Select
-          title="Members"
-          options={memberStateKeys}
-          onChange={handleMemberFilterChange}
-          translationKey="members"
-          selected="active"
-        />
-        <Select
-          title="Groups"
-          options={groupTypeKeys}
-          onChange={handleGroupFilterChange}
-          translationKey="members"
-          selected="all"
-        />
+        <div className="w-1/2 sm:w-auto pr-1">
+          <Select
+            title="Member"
+            options={memberStateKeys}
+            onChange={handleMemberFilterChange}
+            translationKey="members"
+            selected="active"
+          />
+        </div>
+        <div className="w-1/2 sm:w-auto pl-1">
+          <Select
+            title="Group"
+            options={groupTypeKeys}
+            onChange={handleGroupFilterChange}
+            translationKey="members"
+            selected="all"
+          />
+        </div>
       </div>
       <table className="table-fixed w-full">
         <thead>

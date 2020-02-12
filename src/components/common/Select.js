@@ -22,9 +22,8 @@ function Select(props) {
   }, [current, onChange]);
 
   return (
-    <div className="flex flex-row items-center justify-end">
-      <p className="w-auto mr-2">{t(title)}:</p>
-      <div className="relative border border-gray-500 rounded-lg flex flex-row items-center">
+    <>
+      <div className="relative w-full border border-gray-500 rounded-lg flex flex-row items-center">
         <select
           className="w-full pl-4 pr-10 py-2 bg-transparent appearance-none focus:outline-none"
           onChange={handleChange}
@@ -32,7 +31,7 @@ function Select(props) {
         >
           {options.map(option => (
             <option key={option} value={option}>
-              {t(option)}
+              {t(`${option}${title}`)}
             </option>
           ))}
         </select>
@@ -41,7 +40,7 @@ function Select(props) {
           size="24"
         />
       </div>
-    </div>
+    </>
   );
 }
 
