@@ -98,7 +98,7 @@ function MemberRow(props) {
               <Phone className="inline" />
             </a>
           </td>
-          <td className="border-0 text-center">
+          <td className="border-r md:border-0 text-center">
             <a
               href={`mailto:${member.email}`}
               onClick={evt => evt.stopPropagation()}
