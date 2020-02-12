@@ -70,6 +70,12 @@ function MemberRow(props) {
   }, [initialFlipped]); // eslint-disable-line
 
   const handleClick = () => {
+    if (!flipped) {
+      const selection = window.getSelection().toString();
+      if (selection.length > 0) {
+        return;
+      }
+    }
     setFlipped(!flipped);
   };
 
@@ -127,7 +133,7 @@ function MemberRow(props) {
                   : `w-1/${smCategories.length}`
               }`.trimRight()}
             >
-              {member[category]}
+              <span className="cursor-text">{member[category]}</span>
             </td>
           );
         })
