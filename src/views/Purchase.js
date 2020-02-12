@@ -200,7 +200,19 @@ function Purchase() {
         (obj, category) => ({ ...obj, [category]: item[category].sum }),
         {}
       ),
-      createdAt: new Date(),
+      createdAt: Object.keys(item).reduce((date, category) => {
+        const entries = item[category].entries
+          .map(elem => elem.createdAt)
+          .filter(createdAt => !!createdAt);
+        if (entries.length === 0) {
+          return date;
+        }
+        const latest = Math.max(...entries);
+        if (date) {
+          return new Date(Math.max(date, latest));
+        }
+        return new Date(latest);
+      }, 0),
       total: newBalance,
     };
     addTransaction(transaction);
