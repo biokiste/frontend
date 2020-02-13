@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ChevronDown, ChevronUp } from "react-feather";
 import { PurchaseCategories } from "../../consts";
 import { toCurrency } from "../../utils/numbers";
+import { aggregateDailyTransactions } from "../../utils/data";
 
 function formatValue(value, type, isCategory) {
   if (value === undefined || (isCategory && value === 0)) {
@@ -50,7 +51,8 @@ function CategoryHeader(props) {
 function TransactionList(props) {
   const { transactions = [], categories = [] } = props;
 
-  const keys = categories.map(category => category.name);
+  const keys = categories.map(category => category.type);
+  const [dailyTransactions, setDailyTransactions] = useState([]); 
   const [sort, setSort] = useState(1);
   const [sortBy, setSortBy] = useState(keys[0]);
 
@@ -59,8 +61,12 @@ function TransactionList(props) {
   }, [sortBy]);
 
   useEffect(() => {
-    setSortBy(categories[0] && categories[0].name);
+    setSortBy(categories[0] && categories[0].type);
   }, [categories]);
+
+  useEffect(() => {
+    setDailyTransactions(aggregateDailyTransactions(transactions, categories));
+  }, [transactions, categories]);
 
   const handleSort = () => {
     setSort(sort < 0 ? 1 : -1);
@@ -70,8 +76,8 @@ function TransactionList(props) {
     setSortBy(category);
   };
 
-  const sortedTransactions = transactions.sort((a, b) => {
-    const category = categories.find(({ name }) => name === sortBy);
+  const sortedTransactions = dailyTransactions.sort((a, b) => {
+    const category = categories.find(({ type }) => type === sortBy);
 
     if (!category) {
       return 0;
@@ -79,13 +85,8 @@ function TransactionList(props) {
 
     const valA = sort < 0 ? a[sortBy] : b[sortBy];
     const valB = sort < 0 ? b[sortBy] : a[sortBy];
-
-    switch (category.type) {
-      case "Date":
-        return new Date(valA) - new Date(valB);
-      default:
-        return (valA || 0) - (valB || 0);
-    }
+    
+    return (valA || 0) - (valB || 0);
   });
 
   return (
@@ -94,14 +95,11 @@ function TransactionList(props) {
         <thead>
           <tr>
             {keys.map(key => {
-              const categoryKey = Object.keys(PurchaseCategories).find(
-                k => PurchaseCategories[k] === key
-              );
               return (
                 <th
                   key={key}
                   className={`p-4 py-2 ${
-                    categoryKey !== undefined
+                    key === "createAt" || key === "total"
                       ? "invisible md:visible"
                       : `w-1/2 md:w-1/${keys.length}`
                   }`.trimRight()}
@@ -128,7 +126,7 @@ function TransactionList(props) {
                 className={idx % 2 === 0 ? "bg-gray-100" : ""}
               >
                 {keys.map(key => {
-                  const { type } = categories.find(({ name }) => name === key);
+                  const { type } = categories.find(({ type }) => type === key);
                   const value = transaction[key];
                   const category = Object.keys(PurchaseCategories).find(
                     k => PurchaseCategories[k] === key
