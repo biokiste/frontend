@@ -1,23 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, ChevronUp } from "react-feather";
-import { PurchaseCategories } from "../../consts";
 import { toCurrency } from "../../utils/numbers";
 import { aggregateDailyTransactions } from "../../utils/data";
-
-function formatValue(value, type, isCategory) {
-  if (value === undefined || (isCategory && value === 0)) {
-    return "";
-  }
-  switch (type) {
-    case "Date":
-      return value.toLocaleString("de-DE", {
-        dateStyle: "medium"
-      });
-    default:
-      return toCurrency(value);
-  }
-}
 
 function CategoryHeader(props) {
   const { category, sortBy, sort, onChangeSort, onChangeSortBy } = props;
@@ -49,24 +34,39 @@ function CategoryHeader(props) {
 }
 
 function TransactionList(props) {
-  const { transactions = [], categories = [] } = props;
+  const { transactions = [], categories = [], balance = 0 } = props;
 
-  const keys = categories.map(category => category.type);
-  const [dailyTransactions, setDailyTransactions] = useState([]); 
+  const [dailyTransactions, setDailyTransactions] = useState([]);
+  const [enhancedCategories, setEnhancedCategories] = useState([]);
   const [sort, setSort] = useState(1);
-  const [sortBy, setSortBy] = useState(keys[0]);
+  const [sortBy, setSortBy] = useState(null);
 
   useEffect(() => {
     setSort(1);
   }, [sortBy]);
 
   useEffect(() => {
-    setSortBy(categories[0] && categories[0].type);
+    const correctionIdx = categories.findIndex(
+      item => item.type === "correction"
+    );
+    setEnhancedCategories([
+      { type: "createdAt" },
+      ...categories.slice(0, correctionIdx),
+      ...categories.slice(correctionIdx + 1),
+      { type: "dailyTotal" },
+      { type: "balance" },
+    ]);
   }, [categories]);
 
   useEffect(() => {
-    setDailyTransactions(aggregateDailyTransactions(transactions, categories));
-  }, [transactions, categories]);
+    setSortBy(enhancedCategories[0] && enhancedCategories[0].type);
+  }, [enhancedCategories]);
+
+  useEffect(() => {
+    setDailyTransactions(
+      aggregateDailyTransactions(transactions, categories, balance)
+    );
+  }, [transactions, categories, balance]);
 
   const handleSort = () => {
     setSort(sort < 0 ? 1 : -1);
@@ -85,9 +85,11 @@ function TransactionList(props) {
 
     const valA = sort < 0 ? a[sortBy] : b[sortBy];
     const valB = sort < 0 ? b[sortBy] : a[sortBy];
-    
+
     return (valA || 0) - (valB || 0);
   });
+
+  const keys = enhancedCategories.map(category => category.type);
 
   return (
     <div className="w-full p-2">
@@ -125,26 +127,26 @@ function TransactionList(props) {
                 key={`transaction-${idx}`}
                 className={idx % 2 === 0 ? "bg-gray-100" : ""}
               >
-                {keys.map(key => {
-                  const { type } = categories.find(({ type }) => type === key);
+                {keys.map((key, idx, arr) => {
                   const value = transaction[key];
-                  const category = Object.keys(PurchaseCategories).find(
-                    k => PurchaseCategories[k] === key
-                  );
-                  const isCategory = category !== undefined;
-                  const output = formatValue(value, type, isCategory);
+                  const output =
+                    key !== "createdAt"
+                      ? toCurrency(value)
+                      : new Date(value).toLocaleString("de-DE", {
+                          dateStyle: "medium",
+                        });
                   return (
                     <td
                       key={key}
                       className={`border px-4 py-2 text-center md:w-1/${
                         keys.length
                       } ${
-                        category !== undefined
+                        idx === 0 || idx === arr.length - 1
                           ? "invisible md:visible"
                           : "w-1/2"
                       }`.trimRight()}
                     >
-                      {output}
+                      {value !== 0 ? output : ""}
                     </td>
                   );
                 })}

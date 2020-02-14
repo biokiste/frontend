@@ -92,6 +92,7 @@ storiesOf("Transaction|TransactionList", module).add(
     return (
       <div className="container mx-auto p-2 flex flex-row flex-wrap">
         <TransactionList
+          balance={data.balance}
           transactions={data.transactions}
           categories={categories}
         />
