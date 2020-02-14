@@ -77,7 +77,7 @@ function TransactionList(props) {
   };
 
   const sortedTransactions = dailyTransactions.sort((a, b) => {
-    const category = categories.find(({ type }) => type === sortBy);
+    const category = enhancedCategories.find(({ type }) => type === sortBy);
 
     if (!category) {
       return 0;
@@ -86,7 +86,9 @@ function TransactionList(props) {
     const valA = sort < 0 ? a[sortBy] : b[sortBy];
     const valB = sort < 0 ? b[sortBy] : a[sortBy];
 
-    return (valA || 0) - (valB || 0);
+    return category.type === "createdAt"
+      ? new Date(valA) - new Date(valB)
+      : (valA || 0) - (valB || 0);
   });
 
   const keys = enhancedCategories.map(category => category.type);
