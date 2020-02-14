@@ -6,7 +6,7 @@ import { aggregateDailyTransactions } from "../../utils/data";
 
 function CategoryHeader(props) {
   const { category, sortBy, sort, onChangeSort, onChangeSortBy } = props;
-  const { t } = useTranslation(["transaction", "purchase"]);
+  const { t } = useTranslation("transaction");
 
   const handleSort = () => {
     onChangeSort && onChangeSort();
@@ -16,19 +16,22 @@ function CategoryHeader(props) {
     onChangeSortBy && onChangeSortBy(category);
   };
 
-  const value =
-    t(category) === category ? t(`purchase:${category}`) : t(category);
-
   return sortBy === category ? (
     <>
-      {value}
-      <button className="focus:outline-none ml-2" onClick={handleSort}>
+      <button
+        className="focus:outline-none w-full flex flex-row justify-center font-bold"
+        onClick={handleSort}
+      >
+        <div className="mr-2 truncate">{t(category)}</div>
         {sort > 0 ? <ChevronDown size="24" /> : <ChevronUp size="24" />}
       </button>
     </>
   ) : (
-    <button className="focus:outline-none font-bold" onClick={handleSortBy}>
-      {value}
+    <button
+      className="focus:outline-none w-full font-bold"
+      onClick={handleSortBy}
+    >
+      <div className="text-center truncate">{t(category)}</div>
     </button>
   );
 }
@@ -46,13 +49,16 @@ function TransactionList(props) {
   }, [sortBy]);
 
   useEffect(() => {
-    const correctionIdx = categories.findIndex(
+    const sortedCategories = categories.sort((a, b) =>
+      a.type.localeCompare(b.type)
+    );
+    const correctionIdx = sortedCategories.findIndex(
       item => item.type === "correction"
     );
     setEnhancedCategories([
       { type: "createdAt" },
-      ...categories.slice(0, correctionIdx),
-      ...categories.slice(correctionIdx + 1),
+      ...sortedCategories.slice(0, correctionIdx),
+      ...sortedCategories.slice(correctionIdx + 1),
       { type: "dailyTotal" },
       { type: "balance" },
     ]);
@@ -93,30 +99,39 @@ function TransactionList(props) {
 
   const keys = enhancedCategories.map(category => category.type);
 
+  // let styles = `lg:w-1/${keys.length}`;
+
   return (
     <div className="w-full p-2">
       <table className="table-fixed w-full">
         <thead>
           <tr>
             {keys.map(key => {
+              let styles = "p-2";
+              if (
+                key !== "createdAt" &&
+                key !== "dailyTotal" &&
+                key !== "balance"
+              ) {
+                styles = `${styles} w-0 invisible lg:visible`;
+              }
+              if (key === "balance") {
+                styles = `${styles} w-0 md:w-1/3 invisible md:visible`;
+              }
+              if (key === "createdAt" || key === "dailyTotal") {
+                styles = `${styles} w-1/2 md:w-1/3`;
+              }
+              styles = `${styles} lg:w-1/${keys.length}`;
+
               return (
-                <th
-                  key={key}
-                  className={`p-4 py-2 ${
-                    key === "createAt" || key === "total"
-                      ? "invisible md:visible"
-                      : `w-1/2 md:w-1/${keys.length}`
-                  }`.trimRight()}
-                >
-                  <div className="flex flex-row justify-center">
-                    <CategoryHeader
-                      category={key}
-                      sortBy={sortBy}
-                      sort={sort}
-                      onChangeSort={handleSort}
-                      onChangeSortBy={handleSortBy}
-                    />
-                  </div>
+                <th key={key} className={styles}>
+                  <CategoryHeader
+                    category={key}
+                    sortBy={sortBy}
+                    sort={sort}
+                    onChangeSort={handleSort}
+                    onChangeSortBy={handleSortBy}
+                  />
                 </th>
               );
             })}
@@ -129,7 +144,7 @@ function TransactionList(props) {
                 key={`transaction-${idx}`}
                 className={idx % 2 === 0 ? "bg-gray-100" : ""}
               >
-                {keys.map((key, idx, arr) => {
+                {keys.map(key => {
                   const value = transaction[key];
                   const output =
                     key !== "createdAt"
@@ -137,17 +152,23 @@ function TransactionList(props) {
                       : new Date(value).toLocaleString("de-DE", {
                           dateStyle: "medium",
                         });
+                  let styles = "border px-4 py-2 text-center truncate";
+                  if (
+                    key !== "createdAt" &&
+                    key !== "dailyTotal" &&
+                    key !== "balance"
+                  ) {
+                    styles = `${styles} w-0 invisible lg:visible`;
+                  }
+                  if (key === "balance") {
+                    styles = `${styles} w-0 md:w-1/3 invisible md:visible`;
+                  }
+                  if (key === "createdAt" || key === "dailyTotal") {
+                    styles = `${styles} w-1/2 md:w-1/3`;
+                  }
+                  styles = `${styles} lg:w-1/${keys.length}`;
                   return (
-                    <td
-                      key={key}
-                      className={`border px-4 py-2 text-center md:w-1/${
-                        keys.length
-                      } ${
-                        idx === 0 || idx === arr.length - 1
-                          ? "invisible md:visible"
-                          : "w-1/2"
-                      }`.trimRight()}
-                    >
+                    <td key={key} className={styles}>
                       {value !== 0 ? output : ""}
                     </td>
                   );
