@@ -1,4 +1,10 @@
 {
   "createdAt": "Datum",
+  "payment": "Bar",
+  "deposit": "Pfand",
+  "percent19": "19%",
+  "percent7": "7%",
+  "paymentSepa": "SEPA",
+  "dailyTotal": "Tagessumme",
   "total": "Kontostand"
 }
