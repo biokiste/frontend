@@ -6,5 +6,6 @@
   "percent7": "7%",
   "paymentSepa": "SEPA",
   "dailyTotal": "Tagessumme",
-  "balance": "Kontostand"
+  "balance": "Kontostand",
+  "submit": "Abschließen"
 }

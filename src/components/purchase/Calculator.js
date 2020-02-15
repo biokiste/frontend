@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { Delete } from "react-feather";
 import { useCalculator } from "./CalculatorContext";
 import { getBackgroundColor, getTextColor } from "../../utils/tailwind";
-import { PurchaseCategories } from "../../consts";
 import { useTranslation } from "react-i18next";
 
 // TODO: format number showing in display using number (currency) utils
@@ -29,9 +28,8 @@ function CalculatorButton(props) {
     small = false,
     color = "blue",
     textColor = "black",
-    disabled,
     onClick,
-    value
+    value,
   } = props;
 
   const clear = value === "clear";
@@ -39,12 +37,9 @@ function CalculatorButton(props) {
 
   const [keyPressed = false, setKeyPressed] = useState();
   const { add, reset, remove } = useCalculator();
-  const { t } = useTranslation("purchase");
+  const { t } = useTranslation("transaction");
 
   const handleClick = useCallback(() => {
-    if (disabled) {
-      return;
-    }
     if (onClick) {
       onClick(value);
     } else if (clear) {
@@ -54,12 +49,9 @@ function CalculatorButton(props) {
     } else {
       add(value);
     }
-  }, [clear, value, onClick, reset, add, remove, del, disabled]);
+  }, [clear, value, onClick, reset, add, remove, del]);
 
   useEffect(() => {
-    if (disabled) {
-      return;
-    }
     const parsedValue = parseInt(value);
     const isNumber =
       typeof parsedValue === "number" &&
@@ -82,7 +74,7 @@ function CalculatorButton(props) {
       (isNumber || clear || del || value === ",") &&
         document.removeEventListener("keydown", handler);
     };
-  }, [clear, del, value, handleClick, disabled]);
+  }, [clear, del, value, handleClick]);
 
   useEffect(() => {
     if (!keyPressed) {
@@ -93,13 +85,12 @@ function CalculatorButton(props) {
   }, [keyPressed]);
 
   const bgColor = getBackgroundColor(color, keyPressed ? 700 : 500);
-  const bgColorFocus = disabled ? bgColor : getBackgroundColor(color, 600);
+  const bgColorFocus = getBackgroundColor(color, 600);
   const bgColorActive = getBackgroundColor(color, 700);
   const txtColor = getTextColor(textColor, 500);
   const isSmall = small ? "px-2 text-xs" : "px-4 py-2";
-  const isDisabled = disabled ? "opacity-25 pointer-events-none" : "";
 
-  const classes = `w-full ${bgColor} focus:outline-none focus:${bgColorFocus} hover:${bgColorFocus} active:${bgColorActive} rounded font-bold ${txtColor} ${isSmall} ${isDisabled} truncate`.trimRight();
+  const classes = `w-full ${bgColor} focus:outline-none focus:${bgColorFocus} hover:${bgColorFocus} active:${bgColorActive} rounded font-bold ${txtColor} ${isSmall} truncate`.trimRight();
 
   return (
     <button
@@ -108,114 +99,94 @@ function CalculatorButton(props) {
       aria-label={t(value)}
       onClick={handleClick}
     >
-      {value === "delete" ? <Delete className="m-auto" /> : value === "clear" ? "C" : t(value)}
+      {value === "delete" ? (
+        <Delete className="m-auto" />
+      ) : value === "clear" ? (
+        "C"
+      ) : (
+        t(value)
+      )}
     </button>
   );
 }
-
-const MemorizedCalculatorButton = React.memo(CalculatorButton);
 
 /**
  * Calculator for purchase section
  */
 function Calculator(props) {
-  const { onSubmit } = props;
+  const { onSubmit, categories = [] } = props;
   const { value, reset } = useCalculator();
 
-  const onClick = btnValue => {
-    if (onSubmit) {
-      onSubmit(btnValue, value);
-      reset();
-    }
+  const handleClick = btnValue => {
+    onSubmit &&
+      onSubmit(btnValue, btnValue.startsWith("percent") ? `-${value}` : value);
+    reset();
   };
+
+  const filteredCategories = categories
+    .filter(category => {
+      const { type } = category;
+      return type !== "correction";
+    })
+    .sort((a, b) => a.type.localeCompare(b.type));
 
   return (
     <>
       <CalculatorDisplay value={value} />
       <div className="flex mb-2">
-        <div className="w-1/5 pr-1">
-          <MemorizedCalculatorButton
-            color="green"
-            value={PurchaseCategories.GiroTransfer}
-            onClick={onClick}
-            disabled={!onSubmit}
-            small
-          />
-        </div>
-        <div className="w-1/5 pr-1">
-          <MemorizedCalculatorButton
-            color="green"
-            value={PurchaseCategories.CashPayment}
-            onClick={onClick}
-            disabled={!onSubmit}
-            small
-          />
-        </div>
-        <div className="w-1/5 pr-1">
-          <MemorizedCalculatorButton
-            color="green"
-            value={PurchaseCategories.Deposit}
-            onClick={onClick}
-            disabled={!onSubmit}
-            small
-          />
-        </div>
-        <div className="w-1/5 pr-1">
-          <MemorizedCalculatorButton
-            value={PurchaseCategories.ReducedVAT}
-            onClick={onClick}
-            disabled={!onSubmit}
-            small
-          />
-        </div>
-        <div className="w-1/5">
-          <MemorizedCalculatorButton
-            value={PurchaseCategories.VAT}
-            onClick={onClick}
-            disabled={!onSubmit}
-            small
-          />
-        </div>
+        {filteredCategories.map(category => {
+          const { type } = category;
+          return (
+            <div key={type} className="w-1/5 pr-1">
+              <CalculatorButton
+                color={type.startsWith("percent") ? "blue" : "green"}
+                value={type}
+                onClick={handleClick}
+                small
+              />
+            </div>
+          );
+        })}
       </div>
       <div className="flex flex-wrap">
         <div className="w-1/4 pr-1 pb-1">
-          <MemorizedCalculatorButton color="gray" value="7" />
+          <CalculatorButton color="gray" value="7" />
         </div>
         <div className="w-1/4 pr-1 pb-1">
-          <MemorizedCalculatorButton color="gray" value="8" />
+          <CalculatorButton color="gray" value="8" />
         </div>
         <div className="w-1/4 pr-1 pb-1">
-          <MemorizedCalculatorButton color="gray" value="9" />
+          <CalculatorButton color="gray" value="9" />
         </div>
         <div className="w-1/4">
-          <MemorizedCalculatorButton color="orange" value="clear" />
+          <CalculatorButton color="orange" value="clear" />
         </div>
         <div className="w-1/4 pr-1 pb-1">
-          <MemorizedCalculatorButton color="gray" value="4" />
+          <CalculatorButton color="gray" value="4" />
         </div>
         <div className="w-1/4 pr-1 pb-1">
-          <MemorizedCalculatorButton color="gray" value="5" />
+          <CalculatorButton color="gray" value="5" />
         </div>
         <div className="w-1/4 pr-1 pb-1">
-          <MemorizedCalculatorButton color="gray" value="6" />
+          <CalculatorButton color="gray" value="6" />
         </div>
         <div className="w-1/4">
-          <MemorizedCalculatorButton color="orange" value="delete" />
+          <CalculatorButton color="orange" value="delete" />
         </div>
         <div className="w-1/4 pr-1 pb-1">
-          <MemorizedCalculatorButton color="gray" value="1" />
+          <CalculatorButton color="gray" value="1" />
         </div>
         <div className="w-1/4 pr-1">
-          <MemorizedCalculatorButton color="gray" value="2" />
+          <CalculatorButton color="gray" value="2" />
         </div>
         <div className="w-1/4 pr-1">
-          <MemorizedCalculatorButton color="gray" value="3" />
+          <CalculatorButton color="gray" value="3" />
         </div>
         <div className="w-1/2 pr-1">
-          <MemorizedCalculatorButton color="gray" value="0" />
+          <CalculatorButton color="gray" value="0" />
         </div>
         <div className="w-1/4 pr-1">
-          <MemorizedCalculatorButton color="gray" value="," />
+          <CalculatorButton color="gray" value="," />
         </div>
       </div>
     </>
@@ -224,7 +195,7 @@ function Calculator(props) {
 
 Calculator.propTypes = {
   /** Handler for submitted values */
-  onSubmit: PropTypes.func
+  onSubmit: PropTypes.func,
 };
 
 export default Calculator;

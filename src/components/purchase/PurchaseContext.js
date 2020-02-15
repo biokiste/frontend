@@ -1,33 +1,13 @@
 import React, { createContext, useReducer, useContext } from "react";
 import { fromCurrency } from "../../utils/numbers";
-import {
-  ApplicationErrors,
-  PurchaseCategories,
-  AlertSeverity
-} from "../../consts";
+import { ApplicationErrors, AlertSeverity } from "../../consts";
 import { useAlert } from "../common/Alert";
 import { useTranslation } from "react-i18next";
 
 const PurchaseContext = createContext();
 
-const initialState = {
-  [PurchaseCategories.ReducedVAT]: { entries: [], sum: 0 },
-  [PurchaseCategories.VAT]: { entries: [], sum: 0 },
-  [PurchaseCategories.Deposit]: { entries: [], sum: 0 },
-  [PurchaseCategories.GiroTransfer]: { entries: [], sum: 0 },
-  [PurchaseCategories.CashPayment]: { entries: [], sum: 0 }
-};
-
 const purchaseReducer = (state, action) => {
   const { type, category, value, index } = action;
-  if (
-    type !== "CLEAR" &&
-    !Object.keys(PurchaseCategories).some(
-      key => PurchaseCategories[key] === category
-    )
-  ) {
-    throw new Error(`Unknown purchase category: ${category}`);
-  }
   switch (type) {
     case "ADD": {
       if (state[category] === undefined) {
@@ -39,33 +19,23 @@ const purchaseReducer = (state, action) => {
       const val = parseFloat(value.replace(",", "."));
       return {
         ...state,
-        [category]: {
-          entries: [
-            ...state[category].entries,
-            { value: val, createdAt: new Date() }
-          ],
-          sum: state[category].sum + val
-        }
+        [category]: [...state[category], val],
       };
     }
     case "REMOVE": {
       if (state[category] === undefined) {
         return { ...state };
       }
-      const entry = state[category].entries[index];
       return {
         ...state,
-        [category]: {
-          entries: [
-            ...state[category].entries.slice(0, index),
-            ...state[category].entries.slice(index + 1)
-          ],
-          sum: state[category].sum - entry.value
-        }
+        [category]: [
+          ...state[category].slice(0, index),
+          ...state[category].slice(index + 1),
+        ],
       };
     }
     case "CLEAR": {
-      return initialState;
+      return {};
     }
     default: {
       throw new Error(`Unhandled action type: ${type}`);
@@ -73,30 +43,14 @@ const purchaseReducer = (state, action) => {
   }
 };
 
-function createInitialState(state) {
-  if (!state) {
-    return initialState;
-  }
-  const enhancedState = Object.keys(state).reduce((obj, category) => {
-    const entries = state[category].entries;
-    const sum = entries.reduce((num, entry) => (num += entry.value), 0);
-    obj[category] = { entries, sum };
-    return obj;
-  }, {});
-  const mergedState = { ...initialState, ...enhancedState };
-  return mergedState;
-}
-
 function PurchaseProvider(props) {
-  const { children, initialState: defaultState } = props;
-  const [state, dispatch] = useReducer(
-    purchaseReducer,
-    createInitialState(defaultState)
-  );
+  const { children } = props;
+  const [state, dispatch] = useReducer(purchaseReducer, {});
   const { showAlert } = useAlert();
   const { t } = useTranslation("errors");
+
   const add = (category, value) => {
-    if (category === PurchaseCategories.CashPayment) {
+    if (category === "payment") {
       const valid = fromCurrency(value) % 5 === 0;
       if (!valid) {
         showAlert(t(ApplicationErrors.WrongCashPayment), AlertSeverity.Error);

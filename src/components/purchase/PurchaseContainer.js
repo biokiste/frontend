@@ -3,36 +3,27 @@ import { PurchaseProvider, usePurchase } from "./PurchaseContext";
 import { CalculatorProvider } from "./CalculatorContext";
 import Calculator from "./Calculator";
 import Overview from "./Overview";
-import { PurchaseCategories } from "../../consts";
 import { toCurrency } from "../../utils/numbers";
 import { getTextColor } from "../../utils/tailwind";
 import { useTranslation } from "react-i18next";
 
 function AccountStatus(props) {
-  const { accountBalance } = props;
+  const { balance = 0 } = props;
   const [updatedBalance = 0, setUpdatedBalance] = useState();
   const { state } = usePurchase();
   const { t } = useTranslation("purchase");
 
   useEffect(() => {
-    const result = Object.keys(state).reduce((num, key) => {
-      if (
-        [
-          PurchaseCategories.GiroTransfer,
-          PurchaseCategories.CashPayment,
-          PurchaseCategories.Deposit
-        ].some(value => value === key)
-      ) {
-        return num + state[key].sum;
-      }
-      return num - state[key].sum;
-    }, accountBalance);
+    const result = Object.keys(state).reduce(
+      (num, key) => num + state[key].reduce((sum, val) => sum + val, 0),
+      balance
+    );
     setUpdatedBalance(result);
-  }, [state, accountBalance]);
+  }, [state, balance]);
   return (
     <>
       <p>
-        {t("balance")}: {toCurrency(accountBalance)}
+        {t("balance")}: {toCurrency(balance)}
       </p>
       <p className={`${updatedBalance < 0 && getTextColor("red")}`}>
         {t("new balance")}: {toCurrency(updatedBalance)}
@@ -41,17 +32,18 @@ function AccountStatus(props) {
   );
 }
 
-function CalculatorContainer() {
+function CalculatorContainer(props) {
+  const { categories } = props;
   const { add } = usePurchase();
   return (
     <CalculatorProvider>
-      <Calculator onSubmit={add} />
+      <Calculator onSubmit={add} categories={categories} />
     </CalculatorProvider>
   );
 }
 
 function PurchaseContainer(props) {
-  const { accountBalance = 0, onSubmit } = props;
+  const { accountBalance = 0, onSubmit, categories = [] } = props;
   const { t } = useTranslation("purchase");
   return (
     <PurchaseProvider>
@@ -65,10 +57,14 @@ function PurchaseContainer(props) {
         </div>
       </div>
       <div className="w-full md:w-1/2 lg:w-1/3 p-2">
-        <CalculatorContainer />
+        <CalculatorContainer categories={categories} />
       </div>
       <div className="w-full md:w-1/2 lg:w-2/3 p-2">
-        <Overview onSubmit={onSubmit} balance={accountBalance} />
+        <Overview
+          onSubmit={onSubmit}
+          balance={accountBalance}
+          categories={categories}
+        />
       </div>
     </PurchaseProvider>
   );

@@ -3,12 +3,11 @@ import { Trash2 } from "react-feather";
 import { usePurchase } from "./PurchaseContext";
 import { toCurrency } from "../../utils/numbers";
 import Button from "../common/Button";
-import { PurchaseCategories } from "../../consts";
 import { useTranslation } from "react-i18next";
 
 function CategoryHeader(props) {
   const { category, value } = props;
-  const { t } = useTranslation("purchase");
+  const { t } = useTranslation("transaction");
   return (
     <div className="flex flex-row p-3 border-b-2 border-dotted justify-between">
       <div className="font-bold">{t(category)}</div>
@@ -21,7 +20,7 @@ function Entry(props) {
   const { category, value, index } = props;
   const { remove } = usePurchase(category);
 
-  const onClick = () => {
+  const handleClick = () => {
     remove(category, index);
   };
   return (
@@ -30,7 +29,7 @@ function Entry(props) {
       <div className="px-2">
         <button
           className="text-black focus:outline-none hover:opacity-50"
-          onClick={onClick}
+          onClick={handleClick}
         >
           <Trash2 />
         </button>
@@ -40,51 +39,59 @@ function Entry(props) {
 }
 
 function Overview(props) {
-  const { onSubmit, balance = 0 } = props;
+  const { onSubmit, categories = [] } = props;
   const { state, clear } = usePurchase();
-  const { t } = useTranslation("purchase");
-  const categories = Object.keys(state).sort((a, b) => a.localeCompare(b));
+  const { t } = useTranslation("transaction");
 
   const onClick = () => {
     onSubmit && onSubmit(state);
     clear();
   };
 
+  const filteredCategories = categories
+    .filter(category => {
+      const { type } = category;
+      return type !== "correction";
+    })
+    .sort((a, b) => a.type.localeCompare(b.type));
+
   const hasEntries = categories.some(
-    category => state[category].entries.length > 0
+    category => state[category.type] && state[category.type].length > 0
   );
 
   const hasNegativeSum =
-    categories.reduce((num, category) => {
-      if (
-        [
-          PurchaseCategories.GiroTransfer,
-          PurchaseCategories.CashPayment,
-          PurchaseCategories.Deposit
-        ].some(key => key === category)
-      ) {
-        return num + state[category].sum;
-      }
-      return num - state[category].sum;
-    }, balance) < 0;
+    Object.keys(state).reduce((num, key) => {
+      const categorySum = state[key].reduce((sum, value) => sum + value, 0);
+      return num + categorySum;
+    }, 0) < 0;
 
   return (
     <>
-      {categories.length > 0 &&
-        categories.map(category => (
-          <div key={category}>
-            <CategoryHeader category={category} value={state[category].sum} />
-            {state[category].entries.map((entry, index) => (
-              <Entry
-                key={category + entry.value + index}
-                category={category}
-                value={entry.value}
-                index={index}
-              />
-            ))}
-            {state[category].entries.length > 0 && <hr className="border-2" />}
-          </div>
-        ))}
+      {filteredCategories.length > 0 &&
+        filteredCategories.map(category => {
+          const { type } = category;
+          const sum =
+            state[type] !== undefined
+              ? state[type].reduce((num, cur) => num + cur, 0)
+              : 0;
+          return (
+            <div key={type}>
+              <CategoryHeader category={type} value={sum} />
+              {state[type] &&
+                state[type].map((value, index) => (
+                  <Entry
+                    key={category + value + index}
+                    category={type}
+                    value={value}
+                    index={index}
+                  />
+                ))}
+              {state[type] && state[type].length > 0 && (
+                <hr className="border-2" />
+              )}
+            </div>
+          );
+        })}
       <div className="text-right mt-4">
         <Button
           value={t("submit")}

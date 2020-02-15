@@ -1,15 +1,14 @@
-const WrongCashPayment =
-  "wrongCashPayment";
+const WrongCashPayment = "wrongCashPayment";
 
 export const ApplicationErrors = {
-  WrongCashPayment
+  WrongCashPayment,
 };
 
 export const AlertSeverity = {
   Error: "error",
   Warning: "warning",
   Info: "info",
-}
+};
 
 const GiroTransfer = "giro";
 const CashPayment = "cash";
@@ -22,5 +21,36 @@ export const PurchaseCategories = {
   CashPayment,
   Deposit,
   VAT,
-  ReducedVAT
+  ReducedVAT,
+};
+
+const TransactionCategories = [
+  {
+    id: 1,
+    type: "payment",
+  },
+  {
+    id: 2,
+    type: "deposit",
+  },
+  {
+    id: 3,
+    type: "correction",
+  },
+  {
+    id: 4,
+    type: "percent19",
+  },
+  {
+    id: 5,
+    type: "percent7",
+  },
+  {
+    id: 6,
+    type: "paymentSepa",
+  },
+];
+
+export const Stories = {
+  TransactionCategories,
 };
