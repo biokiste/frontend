@@ -92,7 +92,7 @@ function MemberRow(props) {
         <>
           <td className="border-0 text-center">
             <a
-              href={`tel:${member.phone}`}
+              href={`tel:${member.mobile}`}
               onClick={evt => evt.stopPropagation()}
             >
               <Phone className="inline" />
