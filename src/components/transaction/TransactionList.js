@@ -149,7 +149,7 @@ function TransactionList(props) {
                   const output =
                     key !== "createdAt"
                       ? toCurrency(value)
-                      : new Date(value).toLocaleString("de-DE", {
+                      : new Date(value).toLocaleDateString("de-DE", {
                           dateStyle: "medium",
                         });
                   let styles = "border px-4 py-2 text-center truncate";
