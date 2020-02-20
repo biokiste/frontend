@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  ChevronDown,
-  ChevronUp,
   Mail,
   Phone,
   Edit,
@@ -11,43 +9,7 @@ import {
 import Fuse from "fuse.js";
 import { getTextColor } from "../../utils/tailwind";
 import Select from "../common/Select";
-
-function CategoryHeader(props) {
-  const {
-    category,
-    sortBy,
-    sort,
-    onChangeSort,
-    onChangeSortBy,
-    translationKey,
-  } = props;
-
-  const { t } = useTranslation(translationKey);
-
-  const handleSort = () => {
-    onChangeSort && onChangeSort();
-  };
-
-  const handleSortBy = () => {
-    onChangeSortBy && onChangeSortBy(category);
-  };
-
-  return sortBy === category ? (
-    <>
-      <button
-        className="focus:outline-none flex flex-row font-bold"
-        onClick={handleSort}
-      >
-        <div className="mr-2">{t(category)}</div>
-        {sort > 0 ? <ChevronDown size="24" /> : <ChevronUp size="24" />}
-      </button>
-    </>
-  ) : (
-    <button className="focus:outline-none font-bold" onClick={handleSortBy}>
-      {t(category)}
-    </button>
-  );
-}
+import ColumnSort from "../table/ColumnSort";
 
 function MemberRow(props) {
   const { index, member, categories, flipped: initialFlipped, onFlip } = props;
@@ -164,6 +126,7 @@ function MembersList(props) {
   const [result, setResult] = useState(members);
   const [flippedIndex, setFlippedIndex] = useState(-1);
   const fuse = useRef(null);
+  const { t } = useTranslation("members");
 
   useEffect(() => {
     setSort(-1);
@@ -309,13 +272,13 @@ function MembersList(props) {
                   }`}
                 >
                   <div className="flex flex-row justify-center truncate">
-                    <CategoryHeader
-                      category={category}
-                      sortBy={sortBy}
-                      sort={sort}
-                      onChangeSort={handleSort}
-                      onChangeSortBy={handleSortBy}
-                      translationKey="members"
+                    <ColumnSort
+                      value={category}
+                      title={t(category)}
+                      sortKey={sortBy}
+                      direction={sort}
+                      onActive={handleSortBy}
+                      onDirection={handleSort}
                     />
                   </div>
                 </th>

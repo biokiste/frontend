@@ -1,40 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { ChevronDown, ChevronUp } from "react-feather";
 import { toCurrency } from "../../utils/numbers";
 import { aggregateDailyTransactions } from "../../utils/data";
-
-function CategoryHeader(props) {
-  const { category, sortBy, sort, onChangeSort, onChangeSortBy } = props;
-  const { t } = useTranslation("transaction");
-
-  const handleSort = () => {
-    onChangeSort && onChangeSort();
-  };
-
-  const handleSortBy = () => {
-    onChangeSortBy && onChangeSortBy(category);
-  };
-
-  return sortBy === category ? (
-    <>
-      <button
-        className="focus:outline-none w-full flex flex-row justify-center font-bold"
-        onClick={handleSort}
-      >
-        <div className="mr-2 truncate">{t(category)}</div>
-        {sort > 0 ? <ChevronDown size="24" /> : <ChevronUp size="24" />}
-      </button>
-    </>
-  ) : (
-    <button
-      className="focus:outline-none w-full font-bold"
-      onClick={handleSortBy}
-    >
-      <div className="text-center truncate">{t(category)}</div>
-    </button>
-  );
-}
+import { ColumnSort } from "../table";
 
 function TransactionList(props) {
   const { transactions = [], categories = [], balance = 0 } = props;
@@ -43,6 +11,7 @@ function TransactionList(props) {
   const [enhancedCategories, setEnhancedCategories] = useState([]);
   const [sort, setSort] = useState(1);
   const [sortBy, setSortBy] = useState(null);
+  const { t } = useTranslation("transaction");
 
   useEffect(() => {
     setSort(1);
@@ -125,12 +94,13 @@ function TransactionList(props) {
 
               return (
                 <th key={key} className={styles}>
-                  <CategoryHeader
-                    category={key}
-                    sortBy={sortBy}
-                    sort={sort}
-                    onChangeSort={handleSort}
-                    onChangeSortBy={handleSortBy}
+                  <ColumnSort
+                    value={key}
+                    title={t(key)}
+                    sortKey={sortBy}
+                    direction={sort}
+                    onActive={handleSortBy}
+                    onDirection={handleSort}
                   />
                 </th>
               );
