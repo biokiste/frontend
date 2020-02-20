@@ -29,3 +29,54 @@ export function getBackgroundColor(color, intensity = 500) {
 export function getTextColor(color, intensity = 500) {
   return `text-${getColor(color, intensity)}`;
 }
+
+export function getColumnVisibility(columns, valueKey) {
+  if (Array.isArray(columns)) {
+    return "";
+  }
+  const columnKey = Object.keys(columns).find(key =>
+    columns[key].includes(valueKey)
+  );
+  return columnKey === "visible"
+    ? columnKey
+    : `invisible ${`${columnKey}:visible`}`;
+}
+
+export function getColumnWidth(columns, valueKey) {
+  if (Array.isArray(columns)) {
+    return `w-1/${columns.length}`;
+  }
+  const breakpoints = Object.keys(columns); //??
+  const breakpointsWithLength = breakpoints.reduce(
+    (obj, breakpoint, idx, arr) => {
+      let count = 0;
+      while (idx + 1 > 0) {
+        count += columns[arr[idx]].length;
+        idx--;
+      }
+      return { ...obj, [breakpoint]: count };
+    },
+    {}
+  );
+  const widths = breakpoints
+    .reverse()
+    .reduce((arr, breakpoint, idx, source) => {
+      if (columns[breakpoint].includes(valueKey)) {
+        while (idx + 1 > 0) {
+          if (source[idx] === "visible") {
+            arr.push(`w-1/${breakpointsWithLength[source[idx]]}`);
+          } else {
+            arr.push(
+              `${source[idx]}:w-1/${breakpointsWithLength[source[idx]]}`
+            );
+          }
+          idx--;
+        }
+        if (breakpoint !== "visible") {
+          arr.splice(0, 0, "w-0");
+        }
+      }
+      return arr;
+    }, []);
+  return widths.join(" ");
+}
