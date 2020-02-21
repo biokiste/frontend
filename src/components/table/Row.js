@@ -3,14 +3,17 @@ import PropTypes from "prop-types";
 import { getColumnVisibility, getColumnWidth } from "../../utils/tailwind";
 
 function Row(props) {
-  const { index, columns, values } = props;
+  const { index, columns, values, sorting } = props;
 
-  const columnKeys = Array.isArray(columns)
-    ? columns
-    : Object.keys(columns).reduce(
-        (keys, breakpoint) => keys.concat(columns[breakpoint]),
-        []
-      );
+  const columnKeys =
+    sorting !== undefined
+      ? sorting
+      : Array.isArray(columns)
+      ? columns
+      : Object.keys(columns).reduce(
+          (keys, breakpoint) => keys.concat(columns[breakpoint]),
+          []
+        );
 
   return (
     <tr className={index % 2 === 0 ? "bg-gray-100" : ""}>
@@ -39,6 +42,8 @@ Row.propTypes = {
   ]),
   /** Values of row */
   values: PropTypes.array,
+  /** Sorted column names */
+  sorting: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default Row;

@@ -102,4 +102,41 @@ storiesOf("Table|Row", module)
         </tbody>
       </table>
     );
+  })
+  .add("with sorted columns", () => {
+    const columns = {
+      visible: ["valueKey4"],
+      sm: ["valueKey2"],
+      md: ["valueKey3"],
+      lg: ["valueKey1"],
+    };
+    const data = [
+      {
+        valueKey4: "value4-1",
+        valueKey2: "value2-1",
+        valueKey3: "value3-1",
+        valueKey1: "value1-1",
+      },
+      {
+        valueKey4: "value4-2",
+        valueKey2: "value2-2",
+        valueKey3: "value3-2",
+        valueKey1: "value1-2",
+      },
+    ];
+    const sorting = ["valueKey4", "valueKey3", "valueKey2", "valueKey1"];
+    return (
+      <table>
+        <tbody>
+          {data.map((values, idx) => (
+            <Row
+              index={idx}
+              columns={columns}
+              values={values}
+              sorting={sorting}
+            />
+          ))}
+        </tbody>
+      </table>
+    );
   });
