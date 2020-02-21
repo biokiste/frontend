@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { toCurrency } from "../../utils/numbers";
 import { aggregateDailyTransactions } from "../../utils/data";
-import { ColumnSort } from "../table";
+import { ColumnSort, Row } from "../table";
+import { getColumnVisibility, getColumnWidth } from "../../utils/tailwind";
 
 function TransactionList(props) {
   const { transactions = [], categories = [], balance = 0 } = props;
@@ -51,24 +52,49 @@ function TransactionList(props) {
     setSortBy(category);
   };
 
-  const sortedTransactions = dailyTransactions.sort((a, b) => {
-    const category = enhancedCategories.find(({ type }) => type === sortBy);
-
-    if (!category) {
-      return 0;
-    }
-
-    const valA = sort < 0 ? a[sortBy] : b[sortBy];
-    const valB = sort < 0 ? b[sortBy] : a[sortBy];
-
-    return category.type === "createdAt"
-      ? new Date(valA) - new Date(valB)
-      : (valA || 0) - (valB || 0);
-  });
-
   const keys = enhancedCategories.map(category => category.type);
 
-  // let styles = `lg:w-1/${keys.length}`;
+  const sortedTransactions = dailyTransactions
+    .sort((a, b) => {
+      const category = enhancedCategories.find(({ type }) => type === sortBy);
+
+      if (!category) {
+        return 0;
+      }
+
+      const valA = sort < 0 ? a[sortBy] : b[sortBy];
+      const valB = sort < 0 ? b[sortBy] : a[sortBy];
+
+      return category.type === "createdAt"
+        ? new Date(valA) - new Date(valB)
+        : (valA || 0) - (valB || 0);
+    })
+    .map(transaction => {
+      const copy = { ...transaction };
+      keys.forEach(key => {
+        if (!copy[key]) {
+          copy[key] = "";
+        } else {
+          const value = copy[key];
+          const formattedValue =
+            key !== "createdAt"
+              ? toCurrency(value)
+              : new Date(value).toLocaleDateString("de-DE", {
+                  dateStyle: "medium",
+                });
+          copy[key] = formattedValue;
+        }
+      });
+      return copy;
+    });
+
+  const columns = {
+    visible: ["createdAt", "dailyTotal"],
+    md: ["balance"],
+    lg: categories
+      .map(category => category.type)
+      .filter(type => type !== "correction"),
+  };
 
   return (
     <div className="w-full p-2">
@@ -76,24 +102,11 @@ function TransactionList(props) {
         <thead>
           <tr>
             {keys.map(key => {
-              let styles = "p-2";
-              if (
-                key !== "createdAt" &&
-                key !== "dailyTotal" &&
-                key !== "balance"
-              ) {
-                styles = `${styles} w-0 invisible lg:visible`;
-              }
-              if (key === "balance") {
-                styles = `${styles} w-0 md:w-1/3 invisible md:visible`;
-              }
-              if (key === "createdAt" || key === "dailyTotal") {
-                styles = `${styles} w-1/2 md:w-1/3`;
-              }
-              styles = `${styles} lg:w-1/${keys.length}`;
+              const visibility = getColumnVisibility(columns, key);
+              const width = getColumnWidth(columns, key);
 
               return (
-                <th key={key} className={styles}>
+                <th key={key} className={`p-2 ${visibility} ${width}`}>
                   <ColumnSort
                     value={key}
                     title={t(key)}
@@ -110,40 +123,13 @@ function TransactionList(props) {
         <tbody>
           {sortedTransactions.map((transaction, idx) => {
             return (
-              <tr
-                key={`transaction-${idx}`}
-                className={idx % 2 === 0 ? "bg-gray-100" : ""}
-              >
-                {keys.map(key => {
-                  const value = transaction[key];
-                  const output =
-                    key !== "createdAt"
-                      ? toCurrency(value)
-                      : new Date(value).toLocaleDateString("de-DE", {
-                          dateStyle: "medium",
-                        });
-                  let styles = "border px-4 py-2 text-center truncate";
-                  if (
-                    key !== "createdAt" &&
-                    key !== "dailyTotal" &&
-                    key !== "balance"
-                  ) {
-                    styles = `${styles} w-0 invisible lg:visible`;
-                  }
-                  if (key === "balance") {
-                    styles = `${styles} w-0 md:w-1/3 invisible md:visible`;
-                  }
-                  if (key === "createdAt" || key === "dailyTotal") {
-                    styles = `${styles} w-1/2 md:w-1/3`;
-                  }
-                  styles = `${styles} lg:w-1/${keys.length}`;
-                  return (
-                    <td key={key} className={styles}>
-                      {value !== 0 ? output : ""}
-                    </td>
-                  );
-                })}
-              </tr>
+              <Row
+                key={transaction.date}
+                index={idx}
+                columns={columns}
+                values={transaction}
+                sorting={keys}
+              />
             );
           })}
         </tbody>
