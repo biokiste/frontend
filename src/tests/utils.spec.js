@@ -31,12 +31,16 @@ describe("utils.tailwind", () => {
         md: ["valueKey4"],
       };
       expect(getColumnWidth(columns, "valueKey1")).toBe(
-        `w-1/1 sm:w-1/3 md:w-1/4`
+        `w-full sm:w-1/3 md:w-1/4`
       );
       expect(getColumnWidth(columns, "valueKey2")).toBe(
         `w-0 sm:w-1/3 md:w-1/4`
       );
       expect(getColumnWidth(columns, "valueKey4")).toBe(`w-0 md:w-1/4`);
+      columns.visible = [...columns.visible, "valueKey5"];
+      expect(getColumnWidth(columns, "valueKey1")).toBe(
+        `w-1/2 sm:w-1/4 md:w-1/5`
+      );
     });
   });
 });

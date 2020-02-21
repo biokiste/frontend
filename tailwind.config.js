@@ -7,7 +7,6 @@ module.exports = {
         landscape: { raw: "(orientation: landscape)" },
       },
       width: {
-        "1/1": "100%",
         "1/7": "14.2857143%",
         "1/8": "0.125%",
       },

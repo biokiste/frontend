@@ -44,9 +44,9 @@ export function getColumnVisibility(columns, valueKey) {
 
 export function getColumnWidth(columns, valueKey) {
   if (Array.isArray(columns)) {
-    return `w-1/${columns.length}`;
+    return columns.length < 2 ? "w-full" : `w-1/${columns.length}`;
   }
-  const breakpoints = Object.keys(columns); //??
+  const breakpoints = Object.keys(columns); //?
   const breakpointsWithLength = breakpoints.reduce(
     (obj, breakpoint, idx, arr) => {
       let count = 0;
@@ -63,12 +63,15 @@ export function getColumnWidth(columns, valueKey) {
     .reduce((arr, breakpoint, idx, source) => {
       if (columns[breakpoint].includes(valueKey)) {
         while (idx + 1 > 0) {
-          if (source[idx] === "visible") {
-            arr.push(`w-1/${breakpointsWithLength[source[idx]]}`);
-          } else {
+          const key = source[idx];
+          if (key === "visible") {
             arr.push(
-              `${source[idx]}:w-1/${breakpointsWithLength[source[idx]]}`
+              breakpointsWithLength[key] < 2
+                ? "w-full"
+                : `w-1/${breakpointsWithLength[key]}`
             );
+          } else {
+            arr.push(`${key}:w-1/${breakpointsWithLength[key]}`);
           }
           idx--;
         }
