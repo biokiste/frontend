@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { getBackgroundColor, getTextColor } from "../../utils/tailwind";
 
 function Button(props) {
-  const { value, color, textColor, disabled, onClick, focus } = props;
+  const { value, color, textColor, disabled, onClick, focus, classes } = props;
 
   const [isFocused, setIsFocused] = useState(false);
 
@@ -41,7 +41,7 @@ function Button(props) {
       ref={ref}
       onClick={handleClick}
       onFocus={handleFocus}
-      className={`w-full md:w-auto px-4 py-2 rounded ${bgColor} focus:outline-none focus:${bgColorFocus} hover:${bgColorFocus} active:${bgColorActive} ${txtColor} ${isDisabled}`.trimRight()}
+      className={`w-full md:w-auto px-4 py-2 rounded ${bgColor} focus:outline-none focus:${bgColorFocus} hover:${bgColorFocus} active:${bgColorActive} ${txtColor} ${isDisabled} ${classes}`.trimRight()}
     >
       {value}
     </button>
@@ -61,6 +61,7 @@ Button.defaultProps = {
   textColor: "black",
   disabled: false,
   focus: false,
+  classes: "",
 };
 
 export default Button;
