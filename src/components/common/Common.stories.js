@@ -1,11 +1,9 @@
 import React from "react";
 import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
-import { AlertProvider } from "../components/common/Alert";
-import Button from "../components/common/Button";
-import { Toolbar, ToolbarItem } from "../components/common/Toolbar";
+import { AlertProvider, Button, Toolbar, ToolbarItem } from "./.";
 import { Info, ShoppingCart, Users, DollarSign, Settings } from "react-feather";
-import { AlertSeverity } from "../consts";
+import { AlertSeverity } from "../../consts";
 
 storiesOf("Common|Alert", module)
   .add("with message string", () => {
@@ -13,7 +11,7 @@ storiesOf("Common|Alert", module)
       <AlertProvider
         initialState={{
           show: true,
-          message: "Alert Message"
+          message: "Alert Message",
         }}
       />
     );
@@ -24,7 +22,7 @@ storiesOf("Common|Alert", module)
         initialState={{
           show: true,
           message: "Error Message",
-          severity: AlertSeverity.Error
+          severity: AlertSeverity.Error,
         }}
       />
     );
@@ -47,7 +45,7 @@ storiesOf("Common|Alert", module)
                 eirmod tempor invidunt ut labore et dolore magna aliquyam erat.
               </p>
             </>
-          )
+          ),
         }}
       />
     );
