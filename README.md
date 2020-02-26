@@ -4,6 +4,13 @@
 
 # Environment Variables
 
+To use login provide following variables in the `.env` file:
+
+```
+REACT_APP_AUTH_DOMAIN=domain
+REACT_APP_AUTH_CLIENT_ID=clientId
+```
+
 To test reading and adding transactions during Rebuild create a `.env` file and add following variables:
 
 ```
