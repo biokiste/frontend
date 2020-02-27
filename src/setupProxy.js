@@ -4,7 +4,7 @@ module.exports = app => {
   app.use(
     "/api",
     httpProxyMiddleware({
-      target: "http://localhost:9001"
+      target: process.env.API,
     })
   );
 };
