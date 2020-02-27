@@ -1,10 +1,11 @@
 import React from "react";
 import { getTextColor } from "../../utils/tailwind";
+import { Link } from "react-router-dom";
 
 function ToolbarItem(props) {
-  const { icon, color } = props;
+  const { icon, color, path } = props;
   const Icon = React.cloneElement(icon, {
-    size: 32
+    size: 32,
   });
 
   const defaultColor = getTextColor(color, 700);
@@ -13,7 +14,7 @@ function ToolbarItem(props) {
     <button
       className={`${defaultColor} focus:outline-none hover:opacity-50 p-2`}
     >
-      {Icon}
+      <Link to={path}>{Icon}</Link>
     </button>
   );
 }
@@ -26,7 +27,7 @@ function Toolbar(props) {
       React.cloneElement(child, {
         color: "black",
         count: arr.length,
-        index: idx
+        index: idx,
       })
     );
   return (
