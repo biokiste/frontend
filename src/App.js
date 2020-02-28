@@ -19,7 +19,7 @@ function App() {
     <>
       {isAuthenticated && (
         <ApiProvider>
-          <BrowserRouter>
+          <BrowserRouter basename={process.env.PUBLIC_URL}>
             <ViewContainer>
               <button onClick={() => logout()}>Log out</button>
               <Route path="/" exact>
