@@ -4,10 +4,7 @@ module.exports = app => {
   app.use(
     "/api",
     httpProxyMiddleware({
-      target:
-        process.env.NODE_ENV === "production"
-          ? process.env.API_PRODUCTION
-          : process.env.API_STAGING,
+      target: process.env.API,
       changeOrigin: true,
     })
   );
