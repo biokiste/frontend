@@ -19,7 +19,7 @@ i18n
   // init i18next
   // for all options read: https://www.i18next.com/overview/configuration-options
   .init({
-    ns: ["transaction", "purchase", "errors", "members", "auth"],
+    ns: ["transaction", "purchase", "errors", "members", "auth", "info"],
     fallbackLng: "de",
     debug: true,
     interpolation: {
