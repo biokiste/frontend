@@ -3,18 +3,23 @@ import { getTextColor } from "../../utils/tailwind";
 import { Link } from "react-router-dom";
 
 function ToolbarItem(props) {
-  const { icon, color, path } = props;
+  const { icon, color, path, onClick } = props;
   const Icon = React.cloneElement(icon, {
     size: 32,
   });
+
+  const handleClick = () => {
+    onClick && onClick();
+  };
 
   const defaultColor = getTextColor(color, 700);
 
   return (
     <button
       className={`${defaultColor} focus:outline-none hover:opacity-50 p-2`}
+      onClick={handleClick}
     >
-      <Link to={path}>{Icon}</Link>
+      {path ? <Link to={path}>{Icon}</Link> : Icon}
     </button>
   );
 }
