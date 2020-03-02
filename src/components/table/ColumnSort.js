@@ -40,9 +40,9 @@ function ColumnSort(props) {
 
 ColumnSort.propTypes = {
   /** Current active column */
-  sortKey: PropTypes.string.isRequired,
+  sortKey: PropTypes.string,
   /** Direction to sort */
-  direction: PropTypes.oneOfType([1, -1]).isRequired,
+  direction: PropTypes.oneOf([1, -1]),
   /** Key of column to sort */
   value: PropTypes.string.isRequired,
   /** Title of column to sort */

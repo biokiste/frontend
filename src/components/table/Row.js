@@ -22,6 +22,7 @@ function Row(props) {
         const width = getColumnWidth(columns, key);
         return (
           <td
+            key={`${key}-${index}`}
             className={`border px-4 py-2 text-center truncate ${visibility} ${width}`.trimRight()}
           >
             {values[key]}
@@ -36,12 +37,9 @@ Row.propTypes = {
   /** Index of row */
   index: PropTypes.number.isRequired,
   /** Column names of table */
-  columns: PropTypes.oneOf([
-    PropTypes.arrayOf(PropTypes.string),
-    PropTypes.objectOf(PropTypes.strings),
-  ]),
+  columns: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   /** Values of row */
-  values: PropTypes.array,
+  values: PropTypes.object,
   /** Sorted column names */
   sorting: PropTypes.arrayOf(PropTypes.string),
 };
