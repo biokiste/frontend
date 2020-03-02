@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useApi } from "../api";
-import { useAuth0 } from "../auth";
 import { Row, ColumnSort } from "../components/table";
 import { useTranslation } from "react-i18next";
 
@@ -93,22 +92,14 @@ function DoorCodes(props) {
 }
 
 function Info() {
-  const { user } = useAuth0();
-  const { getLastActiveUsers, getDoorCodes, getUserData } = useApi();
+  const { getLastActiveUsers, getDoorCodes } = useApi();
   const [lastActiveUsers, setLastActiveUsers] = useState();
   const [doorCodes, setDoorCodes] = useState();
-  const [userData, setUserData] = useState();
 
   useEffect(() => {
     getLastActiveUsers(setLastActiveUsers);
     getDoorCodes(setDoorCodes);
   }, []); // eslint-disable-line
-
-  useEffect(() => {
-    if (user) {
-      getUserData(user.email, setUserData);
-    }
-  }, [user]); // eslint-disable-line
 
   return (
     <div className="w-full p-2">
@@ -122,7 +113,6 @@ function Info() {
           <LastActiveUsers values={lastActiveUsers} />
         </div>
       )}
-      <p>{JSON.stringify(userData)}</p>
     </div>
   );
 }
