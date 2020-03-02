@@ -26,7 +26,8 @@ function ApiProvider(props) {
 
   const value = {
     getLastActiveUsers: setState => call("/api/users/lastactive", setState),
-    getDoorCode: setState => call("/api/settings/doorcode", setState),
+    getDoorCodes: setState => call("/api/settings/doorcode", setState),
+    getUserData: (email, setState) => call(`/api/users/${email}`, setState),
   };
 
   return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>;
