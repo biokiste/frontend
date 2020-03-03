@@ -134,10 +134,15 @@ function Calculator(props) {
     <>
       <CalculatorDisplay value={value} />
       <div className="flex mb-2">
-        {filteredCategories.map(category => {
+        {filteredCategories.map((category, idx, arr) => {
           const { type } = category;
           return (
-            <div key={type} className="w-1/5 pr-1">
+            <div
+              key={type}
+              className={`w-1/5 ${
+                idx < arr.length - 1 ? "pr-1" : ""
+              }`.trimRight()}
+            >
               <CalculatorButton
                 color={type.startsWith("percent") ? "blue" : "green"}
                 value={type}
