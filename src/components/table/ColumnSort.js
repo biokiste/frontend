@@ -21,7 +21,7 @@ function ColumnSort(props) {
         className={`focus:outline-none w-full flex flex-row justify-center font-bold ${disabled &&
           "cursor-default"}`.trimRight()}
         onClick={handleClick}
-        disabled
+        disabled={disabled}
       >
         <div className="mr-2 truncate">{title}</div>
         {direction > 0 ? <ChevronDown size="24" /> : <ChevronUp size="24" />}
@@ -32,6 +32,7 @@ function ColumnSort(props) {
       className={`focus:outline-none w-full font-bold ${disabled &&
         "cursor-default"}`.trimRight()}
       onClick={handleClick}
+      disabled={disabled}
     >
       {title}
     </button>
