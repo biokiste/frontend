@@ -43,7 +43,7 @@ function CalculatorContainer(props) {
 }
 
 function PurchaseContainer(props) {
-  const { accountBalance = 0, onSubmit, categories = [] } = props;
+  const { balance = 0, onSubmit, categories = [] } = props;
   const { t } = useTranslation("purchase");
   return (
     <PurchaseProvider>
@@ -53,7 +53,7 @@ function PurchaseContainer(props) {
           <h1 className="text-4xl">{t("purchase")}</h1>
         </div>
         <div className="w-full sm:w-1/2 p-2 text-left sm:text-right text-xl">
-          <AccountStatus accountBalance={accountBalance} />
+          <AccountStatus balance={balance} />
         </div>
       </div>
       <div className="w-full md:w-1/2 lg:w-1/3 p-2">
@@ -62,8 +62,8 @@ function PurchaseContainer(props) {
       <div className="w-full md:w-1/2 lg:w-2/3 p-2">
         <Overview
           onSubmit={onSubmit}
-          balance={accountBalance}
           categories={categories}
+          balance={balance}
         />
       </div>
     </PurchaseProvider>

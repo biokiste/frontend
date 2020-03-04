@@ -39,7 +39,7 @@ function Entry(props) {
 }
 
 function Overview(props) {
-  const { onSubmit, categories = [] } = props;
+  const { onSubmit, balance = 0, categories = [] } = props;
   const { state, clear } = usePurchase();
   const { t } = useTranslation("transaction");
 
@@ -63,7 +63,7 @@ function Overview(props) {
     Object.keys(state).reduce((num, key) => {
       const categorySum = state[key].reduce((sum, value) => sum + value, 0);
       return num + categorySum;
-    }, 0) < 0;
+    }, balance) < 0;
 
   return (
     <>
