@@ -18,23 +18,23 @@ function App() {
   return (
     <>
       {isAuthenticated && (
-        <ApiProvider>
-          <BrowserRouter basename={process.env.PUBLIC_URL}>
-            <ViewContainer>
+        <BrowserRouter basename={process.env.PUBLIC_URL}>
+          <ViewContainer>
+            <ApiProvider>
               <Route path="/" exact>
                 <InfoView />
               </Route>
               <Route path="/purchase" exact>
                 <PurchaseView />
               </Route>
-            </ViewContainer>
-            <Toolbar>
-              <ToolbarItem icon={<Info />} path="/" />
-              <ToolbarItem icon={<ShoppingCart />} path="/purchase" />
-              <ToolbarItem icon={<LogOut />} onClick={logout} />
-            </Toolbar>
-          </BrowserRouter>
-        </ApiProvider>
+            </ApiProvider>
+          </ViewContainer>
+          <Toolbar>
+            <ToolbarItem icon={<Info />} path="/" />
+            <ToolbarItem icon={<ShoppingCart />} path="/purchase" />
+            <ToolbarItem icon={<LogOut />} onClick={logout} />
+          </Toolbar>
+        </BrowserRouter>
       )}
     </>
   );

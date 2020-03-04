@@ -1,7 +1,8 @@
-export function aggregateDailyTransactions(transactions, categories, balance) {
+export function aggregateDailyTransactions(transactions, categories) {
   const aggregated = transactions
     .reduce((arr, transaction) => {
-      const { type, amount, created_at } = transaction;
+      const { category_id, amount, created_at } = transaction;
+      const { type } = categories.find(category => category.id === category_id);
       const createdAt = created_at.split(" ")[0];
       const idx = arr.findIndex(item => item.createdAt === createdAt);
       if (idx === -1) {

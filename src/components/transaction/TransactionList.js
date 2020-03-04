@@ -35,7 +35,9 @@ function TransactionList(props) {
   }, [categories]);
 
   useEffect(() => {
-    setSortBy(enhancedCategories[0] && enhancedCategories[0].type);
+    if (enhancedCategories[0] && enhancedCategories[0].type) {
+      setSortBy(enhancedCategories[0].type);
+    }
   }, [enhancedCategories]);
 
   useEffect(() => {
@@ -45,7 +47,7 @@ function TransactionList(props) {
   }, [transactions, categories, balance]);
 
   const handleSort = () => {
-    setSort(sort < 0 ? 1 : -1);
+    setSort(sort * -1);
   };
 
   const handleSortBy = category => {
@@ -72,7 +74,7 @@ function TransactionList(props) {
     .map(transaction => {
       const copy = { ...transaction };
       keys.forEach(key => {
-        if (!copy[key]) {
+        if (key !== "dailyTotal" && key !== "balance" && !copy[key]) {
           copy[key] = "";
         } else {
           const value = copy[key];
@@ -124,7 +126,7 @@ function TransactionList(props) {
           {sortedTransactions.map((transaction, idx) => {
             return (
               <Row
-                key={transaction.date}
+                key={transaction.createdAt}
                 index={idx}
                 columns={columns}
                 values={transaction}
