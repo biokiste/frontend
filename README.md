@@ -2,7 +2,7 @@
 
 ![Build Status](https://github.com/biokiste/frontend/workflows/Build/badge.svg)
 
-# Environment Variables
+# Environment Variables (Development)
 
 To use login provide following variables in the `.env` file:
 
@@ -11,11 +11,10 @@ REACT_APP_AUTH_DOMAIN=domain
 REACT_APP_AUTH_CLIENT_ID=clientId
 ```
 
-To test reading and adding transactions during Rebuild create a `.env` file and add following variables:
+To connect fronted to backend add `.env` file and add following variables to the `.env` file:
 
 ```
-TOKEN=token # apikey from backend
-USER_ID=userId # an user id
+API=host # address of api server (e.g. http://localhost:1316)
 ```
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

@@ -35,7 +35,8 @@
     "build-docs": "yarn build-styles && npx styleguidist build",
     "build-styles": "postcss src/styles/tailwind.css -o src/styles/index.css",
     "prebuild": "yarn build-styles",
-    "prestart": "yarn build-styles"
+    "prestart": "yarn build-styles",
+    "postbuild": "node scripts/setupRedirects.js"
   },
   "eslintConfig": {
     "extends": "react-app"
