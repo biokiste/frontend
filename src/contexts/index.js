@@ -1,3 +1,3 @@
-import { StatesContext, StatesProvider } from "./StatesContext";
+import { OptionsContext, OptionsProvider } from "./OptionsContext";
 
-export { StatesContext, StatesProvider };
+export { OptionsContext, OptionsProvider };
