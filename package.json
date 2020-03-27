@@ -36,7 +36,8 @@
     "build-styles": "postcss src/styles/tailwind.css -o src/styles/index.css",
     "prebuild": "yarn build-styles",
     "prestart": "yarn build-styles",
-    "postbuild": "node scripts/setupRedirects.js"
+    "postbuild": "node scripts/setupRedirects.js",
+    "pre-push": "yarn test"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -64,6 +65,7 @@
     "@storybook/addons": "^5.2.8",
     "@storybook/react": "^5.2.8",
     "babel-loader": "^8.0.6",
+    "husky": "^4.2.3",
     "react-styleguidist": "^10.3.2",
     "tailwindcss": "^1.1.4"
   },
