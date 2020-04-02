@@ -1,4 +1,23 @@
 import { getColumnVisibility, getColumnWidth } from "../utils/tailwind";
+import { getStatus } from "../utils/api";
+
+describe("utils.api", () => {
+  test("get api status", async () => {
+    fetch.mockResponse(req =>
+      Promise.resolve({ status: 400, statusText: "Bad Request" })
+    );
+    let error;
+    try {
+      await getStatus();
+    } catch (err) {
+      error = err;
+    }
+    expect(error).toEqual(new Error("Bad Request"));
+    fetch.mockResponse("ok");
+    const res = await getStatus();
+    expect(res).toBe("ok");
+  });
+});
 
 describe("utils.tailwind", () => {
   describe("getColumnVisibility()", () => {
