@@ -53,16 +53,13 @@ test("render received options", async () => {
   expect(getByText(/^Keys:/).textContent).toBe("Keys: ");
   expect(getByText(/^Values:/).textContent).toBe("Values: ");
 
-  await wait(
-    () => {
-      expect(getByText(/^Options:/).textContent).toBe(
-        "Options: option_1, option_2"
-      );
-      expect(getByText(/^Keys:/).textContent).toBe("Keys: key_1, key_2");
-      expect(getByText(/^Values:/).textContent).toBe(
-        "Values: value4, value5, value6"
-      );
-    },
-    { timeout: 1000 }
-  );
+  await wait(() => {
+    expect(getByText(/^Options:/).textContent).toBe(
+      "Options: option_1, option_2"
+    );
+    expect(getByText(/^Keys:/).textContent).toBe("Keys: key_1, key_2");
+    expect(getByText(/^Values:/).textContent).toBe(
+      "Values: value4, value5, value6"
+    );
+  });
 });
