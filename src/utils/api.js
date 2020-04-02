@@ -48,3 +48,29 @@ export async function getUserStates(token) {
     return states;
   }
 }
+
+/**
+ * Get Transaction states
+ *
+ * @param {string} token Auth Token
+ * @returns {Promise<(Array<String>|Error)>}
+ */
+export async function getTransactionStates(token) {
+  let error;
+  let states;
+  try {
+    const res = await fetch("/api/states/transaction", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    states = res.json();
+  } catch (err) {
+    error = err;
+  } finally {
+    if (error) {
+      throw error;
+    }
+    return states;
+  }
+}
