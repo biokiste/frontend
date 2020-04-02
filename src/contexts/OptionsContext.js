@@ -1,13 +1,34 @@
+// @ts-check
+
 import React, { createContext, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 
-const OptionsContext = createContext();
+const OptionsContext = createContext({});
 
+/**
+ * Extract option name and key from route
+ *
+ * @param {string} route
+ * @returns {Array<string>}
+ */
 function getNameAndKeyFromRoute(route) {
   const parts = route.split("/");
   return parts.slice(-2);
 }
 
+/**
+ * @typedef {Object} Option
+ * @property {string} name
+ * @property {string} key
+ * @property {string} data
+ */
+
+/**
+ * Get option by route
+ *
+ * @param {String} route
+ * @returns {Promise<Option>}
+ */
 async function getOption(route) {
   const [name, key] = getNameAndKeyFromRoute(route);
   const res = await fetch(route);
@@ -53,8 +74,17 @@ function OptionsProvider(props) {
 }
 
 OptionsProvider.propTypes = {
+  /**
+   * Children
+   */
   children: PropTypes.element.isRequired,
+  /**
+   * Option Routes
+   */
   routes: PropTypes.arrayOf(PropTypes.string).isRequired,
+  /**
+   * API base path
+   */
   basePath: PropTypes.string,
 };
 
