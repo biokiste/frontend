@@ -35,7 +35,7 @@
     "build-docs": "yarn build-styles && npx styleguidist build",
     "build-styles": "postcss src/styles/tailwind.css -o src/styles/index.css",
     "lint": "npx eslint . --ignore-path .gitignore",
-    "validate": "yarn lint && yarn test",
+    "validate": "npm-run-all --parallel lint test",
     "prebuild": "yarn build-styles",
     "prestart": "yarn build-styles",
     "postbuild": "node scripts/setupRedirects.js"
@@ -68,6 +68,7 @@
     "babel-loader": "^8.0.6",
     "husky": "^4.2.3",
     "lint-staged": "^10.1.1",
+    "npm-run-all": "^4.1.5",
     "react-styleguidist": "^10.3.2",
     "tailwindcss": "^1.1.4"
   },

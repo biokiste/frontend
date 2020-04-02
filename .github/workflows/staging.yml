@@ -16,6 +16,7 @@ jobs:
         with:
           node-version: "12.x"
       - run: yarn install
+      - run: yarn validate
       - run: NODE_ENV=staging yarn build
         env:
           REACT_APP_AUTH_DOMAIN: ${{ secrets.REACT_APP_AUTH_DOMAIN }}
