@@ -193,3 +193,16 @@ export async function getSettings(token) {
   const settings = await res.json();
   return settings;
 }
+
+/**
+ * Get Setting by Key
+ *
+ * @param {string} key Setting Key
+ * @param {string} token Auth Token
+ * @returns {Promise<(Object|Error)>}
+ */
+export async function getSettingByKey(key, token) {
+  const res = await get(`/api/settings/${key}`, token);
+  const setting = await res.json();
+  return setting;
+}
