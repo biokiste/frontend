@@ -40,6 +40,19 @@ export async function getStatus() {
 }
 
 /**
+ * Get all entries
+ *
+ * @param {string} entryType Type of Entries
+ * @param {string} token Auth Token
+ * @returns {Promise<(Array<Object>|Error)>}
+ */
+export async function getAllEntries(entryType, token) {
+  const res = await get(`/api/${entryType}`, token);
+  const entries = await res.json();
+  return entries;
+}
+
+/**
  * Get User states
  *
  * @param {string} token Auth Token
@@ -85,18 +98,6 @@ export async function getTransactionTypes(token) {
   const res = await get("/api/types/transaction", token);
   const types = await res.json();
   return types;
-}
-
-/**
- * Get Users
- *
- * @param {string} token Auth Token
- * @returns {Promise<(Array<Object>|Error)>}
- */
-export async function getUsers(token) {
-  const res = await get("/api/users", token);
-  const users = await res.json();
-  return users;
 }
 
 /**
@@ -158,18 +159,6 @@ export async function getLoans(token, params) {
 }
 
 /**
- * Get Groups
- *
- * @param {string} token Auth Token
- * @returns {Promise<(Array<Object>|Error)>}
- */
-export async function getGroups(token) {
-  const res = await get("/api/groups", token);
-  const groups = await res.json();
-  return groups;
-}
-
-/**
  * Get Group by Id
  *
  * @param {number} id Group id
@@ -180,18 +169,6 @@ export async function getGroupById(id, token) {
   const res = await get(`/api/groups/${id}`, token);
   const group = await res.json();
   return group;
-}
-
-/**
- * Get Settings
- *
- * @param {string} token Auth Token
- * @returns {Promise<(Array<Object>|Error)>}
- */
-export async function getSettings(token) {
-  const res = await get("/api/settings", token);
-  const settings = await res.json();
-  return settings;
 }
 
 /**
