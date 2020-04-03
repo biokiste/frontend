@@ -168,3 +168,16 @@ export async function getGroups(token) {
   const groups = await res.json();
   return groups;
 }
+
+/**
+ * Get Group by Id
+ *
+ * @param {number} id Group id
+ * @param {string} token Auth Token
+ * @returns {Promise<(Object|Error)>}
+ */
+export async function getGroupById(id, token) {
+  const res = await get(`/api/groups/${id}`, token);
+  const group = await res.json();
+  return group;
+}
