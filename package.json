@@ -77,7 +77,8 @@
   "jest": {
     "collectCoverageFrom": [
       "src/**/*.js",
-      "!src/**/*.spec.js"
+      "!src/**/*.spec.js",
+      "!src/tests/**/utils.js"
     ],
     "coveragePathIgnorePatterns": [
       "/node_modules/",
