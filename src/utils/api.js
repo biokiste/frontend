@@ -98,3 +98,16 @@ export async function getUsers(token) {
   const users = await res.json();
   return users;
 }
+
+/**
+ * Get User by Id
+ *
+ * @param {number} id User id
+ * @param {string} token Auth Token
+ * @returns {Promise<(Object|Error)>}
+ */
+export async function getUserById(id, token) {
+  const res = await get(`/api/users/${id}`, token);
+  const user = await res.json();
+  return user;
+}

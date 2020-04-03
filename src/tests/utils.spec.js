@@ -6,6 +6,7 @@ import {
   getLoanStates,
   getTransactionTypes,
   getUsers,
+  getUserById,
 } from "../utils/api";
 
 describe("utils.api", () => {
@@ -110,6 +111,46 @@ describe("utils.api", () => {
     expect(error).toEqual(new Error("Unauthorized"));
     const users = await getUsers(token);
     expect(users).toEqual(expect.arrayContaining(users));
+  });
+  test("get user by id", async () => {
+    const token = "Token";
+    const res = [
+      { id: 1, firstName: "Test1", lastName: "Test1" },
+      { id: 2, firstName: "Test2", lastName: "Test2" },
+    ];
+
+    fetch.mockResponse(req => {
+      const authorization = req.headers.get("Authorization");
+      if (authorization !== `Bearer ${token}`) {
+        return Promise.resolve({ status: 401, statusText: "Unauthorized" });
+      }
+      const parts = req.url.split("/");
+      const id = parseInt(parts[parts.length - 1]);
+      const user = res.find(u => u.id === id);
+      if (!user) {
+      }
+      return Promise.resolve(
+        user ? JSON.stringify(user) : { status: 404, statusText: "Not Found" }
+      );
+    });
+
+    let error;
+    try {
+      await getUserById();
+    } catch (err) {
+      error = err;
+    }
+    expect(error).toEqual(new Error("Unauthorized"));
+
+    try {
+      await getUserById(3, token);
+    } catch (err) {
+      error = err;
+    }
+    expect(error).toEqual(new Error("Not Found"));
+
+    const user = await getUserById(1, token);
+    expect(user).toEqual(res[0]);
   });
 });
 
