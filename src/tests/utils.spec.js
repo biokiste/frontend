@@ -1,5 +1,10 @@
 import { getColumnVisibility, getColumnWidth } from "../utils/tailwind";
-import { getStatus, getUserStates, getTransactionStates } from "../utils/api";
+import {
+  getStatus,
+  getUserStates,
+  getTransactionStates,
+  getLoanStates,
+} from "../utils/api";
 
 describe("utils.api", () => {
   test("get api status", async () => {
@@ -27,6 +32,12 @@ describe("utils.api", () => {
     const states = ["state1", "state2", "state3"];
     fetch.mockResponse(JSON.stringify(states));
     const res = await getTransactionStates("token");
+    expect(res).toEqual(expect.arrayContaining(states));
+  });
+  test("get loan states", async () => {
+    const states = ["state1", "state2", "state3"];
+    fetch.mockResponse(JSON.stringify(states));
+    const res = await getLoanStates("token");
     expect(res).toEqual(expect.arrayContaining(states));
   });
 });

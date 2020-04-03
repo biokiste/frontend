@@ -74,3 +74,29 @@ export async function getTransactionStates(token) {
     return states;
   }
 }
+
+/**
+ * Get Loan states
+ *
+ * @param {string} token Auth Token
+ * @returns {Promise<(Array<String>|Error)>}
+ */
+export async function getLoanStates(token) {
+  let error;
+  let states;
+  try {
+    const res = await fetch("/api/states/loan", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    states = res.json();
+  } catch (err) {
+    error = err;
+  } finally {
+    if (error) {
+      throw error;
+    }
+    return states;
+  }
+}
