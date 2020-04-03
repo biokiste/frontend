@@ -7,7 +7,6 @@ test("get transactions", async () => {
   const res = [
     {
       id: 1,
-      amount: 10,
       type: "type1",
       state: "state1",
       userId: 1,
@@ -15,7 +14,6 @@ test("get transactions", async () => {
     },
     {
       id: 2,
-      amount: 5,
       type: "type1",
       state: "state2",
       userId: 1,
@@ -23,7 +21,6 @@ test("get transactions", async () => {
     },
     {
       id: 3,
-      amount: 5,
       type: "type2",
       state: "state1",
       userId: 2,

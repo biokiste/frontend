@@ -1,6 +1,6 @@
 import { getStatus } from "../../utils/api";
 
-test("get api status", async () => {
+test("get status", async () => {
   fetch.mockResponseOnce(req =>
     Promise.resolve({ status: 400, statusText: "Bad Request" })
   );

@@ -5,7 +5,7 @@ import {
 } from "../../utils/api";
 import { isAuthorized, Token } from "./utils";
 
-test("get states from api", async () => {
+test("get states", async () => {
   const res = ["state1", "state2", "state3"];
 
   fetch.mockResponse(req =>

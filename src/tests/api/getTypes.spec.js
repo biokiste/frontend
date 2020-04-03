@@ -1,7 +1,7 @@
 import { isAuthorized, Token } from "./utils";
 import { getTransactionTypes } from "../../utils/api";
 
-test("get types from api", async () => {
+test("get types", async () => {
   const res = ["type1", "type2", "type3"];
 
   fetch.mockResponse(req =>
