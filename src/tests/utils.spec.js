@@ -36,16 +36,15 @@ describe("utils.api", () => {
     expect(res).toBe("ok");
   });
   test("get states", async () => {
-    const states = ["state1", "state2", "state3"];
-    const token = "Token";
+    const res = ["state1", "state2", "state3"];
 
-    fetch.mockResponse(req => {
-      const authorization = req.headers.get("Authorization");
-      if (authorization !== `Bearer ${token}`) {
-        return Promise.resolve({ status: 401, statusText: "Unauthorized" });
-      }
-      return Promise.resolve(JSON.stringify(states));
-    });
+    fetch.mockResponse(req =>
+      Promise.resolve(
+        isAuthorized(req)
+          ? JSON.stringify(res)
+          : { status: 401, statusText: "Unauthorized" }
+      )
+    );
 
     let error;
     try {
@@ -55,7 +54,7 @@ describe("utils.api", () => {
     }
     expect(error).toEqual(new Error("Unauthorized"));
     const userStates = await getUserStates(token);
-    expect(userStates).toEqual(expect.arrayContaining(states));
+    expect(userStates).toEqual(expect.arrayContaining(res));
 
     try {
       await getTransactionStates();
@@ -64,7 +63,7 @@ describe("utils.api", () => {
     }
     expect(error).toEqual(new Error("Unauthorized"));
     const transactionStates = await getTransactionStates(token);
-    expect(transactionStates).toEqual(expect.arrayContaining(states));
+    expect(transactionStates).toEqual(expect.arrayContaining(res));
 
     try {
       await getLoanStates();
@@ -73,19 +72,18 @@ describe("utils.api", () => {
     }
     expect(error).toEqual(new Error("Unauthorized"));
     const loanStates = await getLoanStates(token);
-    expect(loanStates).toEqual(expect.arrayContaining(states));
+    expect(loanStates).toEqual(expect.arrayContaining(res));
   });
   test("get types", async () => {
-    const types = ["type1", "type2", "type3"];
-    const token = "Token";
+    const res = ["type1", "type2", "type3"];
 
-    fetch.mockResponse(req => {
-      const authorization = req.headers.get("Authorization");
-      if (authorization !== `Bearer ${token}`) {
-        return Promise.resolve({ status: 401, statusText: "Unauthorized" });
-      }
-      return Promise.resolve(JSON.stringify(types));
-    });
+    fetch.mockResponse(req =>
+      Promise.resolve(
+        isAuthorized(req)
+          ? JSON.stringify(res)
+          : { status: 401, statusText: "Unauthorized" }
+      )
+    );
 
     let error;
     try {
@@ -95,7 +93,7 @@ describe("utils.api", () => {
     }
     expect(error).toEqual(new Error("Unauthorized"));
     const transactionTypes = await getTransactionTypes(token);
-    expect(transactionTypes).toEqual(expect.arrayContaining(types));
+    expect(transactionTypes).toEqual(expect.arrayContaining(res));
   });
   test("get users", async () => {
     const token = "Token";
@@ -129,20 +127,11 @@ describe("utils.api", () => {
       { id: 2, firstName: "Test2", lastName: "Test2" },
     ];
 
-    fetch.mockResponse(req => {
-      const authorization = req.headers.get("Authorization");
-      if (authorization !== `Bearer ${token}`) {
-        return Promise.resolve({ status: 401, statusText: "Unauthorized" });
-      }
-      const parts = req.url.split("/");
-      const id = parseInt(parts[parts.length - 1]);
-      const user = res.find(u => u.id === id);
-      if (!user) {
-      }
-      return Promise.resolve(
-        user ? JSON.stringify(user) : { status: 404, statusText: "Not Found" }
-      );
-    });
+    fetch.mockResponseOnce(req =>
+      Promise.resolve(
+        !isAuthorized(req) && { status: 401, statusText: "Unauthorized" }
+      )
+    );
 
     let error;
     try {
@@ -152,6 +141,19 @@ describe("utils.api", () => {
     }
     expect(error).toEqual(new Error("Unauthorized"));
 
+    fetch.mockResponse(req => {
+      if (!isAuthorized(req)) {
+        return Promise.resolve({ status: 401, statusText: "Unauthorized" });
+      }
+      const parts = req.url.split("/");
+      const id = parts[parts.length - 1];
+      const idx = res.findIndex(item => item.id === parseInt(id));
+      return Promise.resolve(
+        idx === -1
+          ? { status: 404, statusText: "Not Found" }
+          : JSON.stringify(res[idx])
+      );
+    });
     try {
       await getUserById(3, token);
     } catch (err) {
