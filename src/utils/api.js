@@ -116,7 +116,7 @@ export async function getUserById(id, token) {
  * Get Transactions
  *
  * @param {string} token Auth Token
- * @param {Object} params Query parameters
+ * @param {Object} [params] Query parameters
  * @returns {Promise<(Array<Object>|Error)>}
  */
 export async function getTransactions(token, params) {
@@ -135,4 +135,24 @@ export async function getTransactions(token, params) {
   const res = await get(`${route}${query}`, token);
   const transactions = await res.json();
   return transactions;
+}
+
+/**
+ * Get Loans
+ *
+ * @param {string} token Auth Token
+ * @param {Object} [params] Query parameters
+ * @returns {Promise<(Array<Object>|Error)>}
+ */
+export async function getLoans(token, params) {
+  const route = "/api/loans";
+  const query = params
+    ? Object.keys(params).reduce((str, key) => {
+        const k = key === "userId" ? "user_id" : key;
+        return `${str}${k}=${params[key]}`;
+      }, "?")
+    : "";
+  const res = await get(`${route}${query}`, token);
+  const loans = await res.json();
+  return loans;
 }
