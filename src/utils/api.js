@@ -181,3 +181,15 @@ export async function getGroupById(id, token) {
   const group = await res.json();
   return group;
 }
+
+/**
+ * Get Settings
+ *
+ * @param {string} token Auth Token
+ * @returns {Promise<(Array<Object>|Error)>}
+ */
+export async function getSettings(token) {
+  const res = await get("/api/settings", token);
+  const settings = await res.json();
+  return settings;
+}
