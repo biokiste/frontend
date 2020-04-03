@@ -4,6 +4,7 @@ import {
   getUserStates,
   getTransactionStates,
   getLoanStates,
+  getTransactionTypes,
 } from "../utils/api";
 
 describe("utils.api", () => {
@@ -39,6 +40,12 @@ describe("utils.api", () => {
     fetch.mockResponse(JSON.stringify(states));
     const res = await getLoanStates("token");
     expect(res).toEqual(expect.arrayContaining(states));
+  });
+  test("get transaction types", async () => {
+    const types = ["type1", "type2", "type3"];
+    fetch.mockResponse(JSON.stringify(types));
+    const res = await getTransactionTypes("token");
+    expect(res).toEqual(expect.arrayContaining(types));
   });
 });
 
