@@ -23,29 +23,67 @@ describe("utils.api", () => {
     const res = await getStatus();
     expect(res).toBe("ok");
   });
-  test("get user states", async () => {
+  test("get states", async () => {
     const states = ["state1", "state2", "state3"];
-    fetch.mockResponse(JSON.stringify(states));
-    const res = await getUserStates("token");
-    expect(res).toEqual(expect.arrayContaining(states));
+    const token = "Token";
+
+    fetch.mockResponse(req => {
+      const authorization = req.headers.get("Authorization");
+      if (authorization !== `Bearer ${token}`) {
+        return Promise.resolve({ status: 401, statusText: "Unauthorized" });
+      }
+      return Promise.resolve(JSON.stringify(states));
+    });
+
+    let error;
+    try {
+      await getUserStates();
+    } catch (err) {
+      error = err;
+    }
+    expect(error).toEqual(new Error("Unauthorized"));
+    const userStates = await getUserStates(token);
+    expect(userStates).toEqual(expect.arrayContaining(states));
+
+    try {
+      await getTransactionStates();
+    } catch (err) {
+      error = err;
+    }
+    expect(error).toEqual(new Error("Unauthorized"));
+    const transactionStates = await getTransactionStates(token);
+    expect(transactionStates).toEqual(expect.arrayContaining(states));
+
+    try {
+      await getLoanStates();
+    } catch (err) {
+      error = err;
+    }
+    expect(error).toEqual(new Error("Unauthorized"));
+    const loanStates = await getLoanStates(token);
+    expect(loanStates).toEqual(expect.arrayContaining(states));
   });
-  test("get transaction states", async () => {
-    const states = ["state1", "state2", "state3"];
-    fetch.mockResponse(JSON.stringify(states));
-    const res = await getTransactionStates("token");
-    expect(res).toEqual(expect.arrayContaining(states));
-  });
-  test("get loan states", async () => {
-    const states = ["state1", "state2", "state3"];
-    fetch.mockResponse(JSON.stringify(states));
-    const res = await getLoanStates("token");
-    expect(res).toEqual(expect.arrayContaining(states));
-  });
-  test("get transaction types", async () => {
+  test("get types", async () => {
     const types = ["type1", "type2", "type3"];
-    fetch.mockResponse(JSON.stringify(types));
-    const res = await getTransactionTypes("token");
-    expect(res).toEqual(expect.arrayContaining(types));
+    const token = "Token";
+
+    fetch.mockResponse(req => {
+      const authorization = req.headers.get("Authorization");
+      if (authorization !== `Bearer ${token}`) {
+        return Promise.resolve({ status: 401, statusText: "Unauthorized" });
+      }
+      return Promise.resolve(JSON.stringify(types));
+    });
+
+    let error;
+    try {
+      await getTransactionTypes();
+    } catch (err) {
+      error = err;
+    }
+    expect(error).toEqual(new Error("Unauthorized"));
+    const transactionTypes = await getTransactionTypes(token);
+    expect(transactionTypes).toEqual(expect.arrayContaining(types));
   });
 });
 
