@@ -111,3 +111,28 @@ export async function getUserById(id, token) {
   const user = await res.json();
   return user;
 }
+
+/**
+ * Get Transactions
+ *
+ * @param {string} token Auth Token
+ * @param {Object} params Query parameters
+ * @returns {Promise<(Array<Object>|Error)>}
+ */
+export async function getTransactions(token, params) {
+  const route = "/api/transactions";
+  const query = params
+    ? Object.keys(params).reduce((str, key) => {
+        const k =
+          key === "createdAt"
+            ? "created_at"
+            : key === "userId"
+            ? "user_id"
+            : key;
+        return `${str}${k}=${params[key]}`;
+      }, "?")
+    : "";
+  const res = await get(`${route}${query}`, token);
+  const transactions = await res.json();
+  return transactions;
+}

@@ -1,3 +1,5 @@
+import URL from "url";
+import moment from "moment";
 import { getColumnVisibility, getColumnWidth } from "../utils/tailwind";
 import {
   getStatus,
@@ -7,9 +9,17 @@ import {
   getTransactionTypes,
   getUsers,
   getUserById,
+  getTransactions,
 } from "../utils/api";
 
 describe("utils.api", () => {
+  const token = "Token";
+
+  function isAuthorized(req) {
+    const authorization = req.headers.get("Authorization");
+    return authorization === `Bearer ${token}`;
+  }
+
   test("get api status", async () => {
     fetch.mockResponse(req =>
       Promise.resolve({ status: 400, statusText: "Bad Request" })
@@ -110,7 +120,7 @@ describe("utils.api", () => {
     }
     expect(error).toEqual(new Error("Unauthorized"));
     const users = await getUsers(token);
-    expect(users).toEqual(expect.arrayContaining(users));
+    expect(users).toEqual(expect.arrayContaining(res));
   });
   test("get user by id", async () => {
     const token = "Token";
@@ -151,6 +161,111 @@ describe("utils.api", () => {
 
     const user = await getUserById(1, token);
     expect(user).toEqual(res[0]);
+  });
+  test("get transactions", async () => {
+    const res = [
+      {
+        id: 1,
+        amount: 10,
+        type: "type1",
+        state: "state1",
+        userId: 1,
+        createdAt: "2016-01-02 15:04:05",
+      },
+      {
+        id: 2,
+        amount: 5,
+        type: "type1",
+        state: "state2",
+        userId: 1,
+        createdAt: "2016-01-03 15:04:05",
+      },
+      {
+        id: 3,
+        amount: 5,
+        type: "type2",
+        state: "state1",
+        userId: 2,
+        createdAt: "2016-01-03 15:04:05",
+      },
+    ];
+
+    fetch.mockResponseOnce(req =>
+      Promise.resolve(
+        !isAuthorized(req) && { status: 401, statusText: "Unauthorized" }
+      )
+    );
+    let error;
+    try {
+      await getTransactions();
+    } catch (err) {
+      error = err;
+    }
+    expect(error).toEqual(new Error("Unauthorized"));
+
+    fetch.mockResponseOnce(req =>
+      Promise.resolve(
+        isAuthorized(req)
+          ? JSON.stringify(res)
+          : { status: 401, statusText: "Unauthorized" }
+      )
+    );
+    let transactions = await getTransactions(token);
+    expect(transactions).toEqual(expect.arrayContaining(res));
+
+    fetch.mockResponseOnce(req => {
+      if (!isAuthorized(req)) {
+        return Promise.resolve({ status: 401, statusText: "Unauthorized" });
+      }
+      const url = URL.parse(req.url, true);
+      return Promise.resolve(
+        JSON.stringify(res.filter(item => item.type === url.query.type))
+      );
+    });
+    transactions = await getTransactions(token, { type: "type1" });
+    expect(transactions).toEqual(expect.arrayContaining([res[0], res[1]]));
+
+    fetch.mockResponseOnce(req => {
+      if (!isAuthorized(req)) {
+        return Promise.resolve({ status: 401, statusText: "Unauthorized" });
+      }
+      const url = URL.parse(req.url, true);
+      return Promise.resolve(
+        JSON.stringify(res.filter(item => item.state === url.query.state))
+      );
+    });
+    transactions = await getTransactions(token, { state: "state1" });
+    expect(transactions).toEqual(expect.arrayContaining([res[0], res[2]]));
+
+    fetch.mockResponseOnce(req => {
+      if (!isAuthorized(req)) {
+        return Promise.resolve({ status: 401, statusText: "Unauthorized" });
+      }
+      const url = URL.parse(req.url, true);
+      return Promise.resolve(
+        JSON.stringify(
+          res.filter(item => item.userId === parseInt(url.query.user_id))
+        )
+      );
+    });
+    transactions = await getTransactions(token, { userId: 2 });
+    expect(transactions).toEqual(expect.arrayContaining([res[2]]));
+
+    fetch.mockResponseOnce(req => {
+      if (!isAuthorized(req)) {
+        return Promise.resolve({ status: 401, statusText: "Unauthorized" });
+      }
+      const url = URL.parse(req.url, true);
+      return Promise.resolve(
+        JSON.stringify(
+          res.filter(item =>
+            moment(item.createdAt).isSame(url.query.created_at, "day")
+          )
+        )
+      );
+    });
+    transactions = await getTransactions(token, { createdAt: "2016-01-03" });
+    expect(transactions).toEqual(expect.arrayContaining([res[1], res[2]]));
   });
 });
 
