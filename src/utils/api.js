@@ -86,3 +86,15 @@ export async function getTransactionTypes(token) {
   const types = await res.json();
   return types;
 }
+
+/**
+ * Get Users
+ *
+ * @param {string} token Auth Token
+ * @returns {Promise<(Array<Object>|Error)>}
+ */
+export async function getUsers(token) {
+  const res = await get("/api/users", token);
+  const users = await res.json();
+  return users;
+}
