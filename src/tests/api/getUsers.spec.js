@@ -1,8 +1,7 @@
-import { isAuthorized } from "./utils";
+import { isAuthorized, Token } from "./utils";
 import { getUsers } from "../../utils/api";
 
 test("get users", async () => {
-  const token = "Token";
   const res = [
     { id: 1, firstName: "Test1", lastName: "Test1" },
     { id: 2, firstName: "Test2", lastName: "Test2" },
@@ -23,6 +22,6 @@ test("get users", async () => {
     error = err;
   }
   expect(error).toEqual(new Error("Unauthorized"));
-  const users = await getUsers(token);
+  const users = await getUsers(Token);
   expect(users).toEqual(expect.arrayContaining(res));
 });
