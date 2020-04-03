@@ -156,3 +156,15 @@ export async function getLoans(token, params) {
   const loans = await res.json();
   return loans;
 }
+
+/**
+ * Get Groups
+ *
+ * @param {string} token Auth Token
+ * @returns {Promise<(Array<Object>|Error)>}
+ */
+export async function getGroups(token) {
+  const res = await get("/api/groups", token);
+  const groups = await res.json();
+  return groups;
+}
