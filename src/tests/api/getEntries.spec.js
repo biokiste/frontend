@@ -1,6 +1,6 @@
 import URL from "url";
 import { isAuthorized, Token } from "./utils";
-import { getAllEntries } from "../../utils/api";
+import { getEntries } from "../../utils/api";
 
 test("get all entries", async () => {
   const entryType = "entries";
@@ -35,25 +35,25 @@ test("get all entries", async () => {
 
   let error;
   try {
-    await getAllEntries();
+    await getEntries();
   } catch (err) {
     error = err;
   }
   expect(error).toEqual(new Error("Unauthorized"));
 
   try {
-    await getAllEntries("unavailable", Token);
+    await getEntries("unavailable", Token);
   } catch (err) {
     error = err;
   }
   expect(error).toEqual(new Error("Not Found"));
 
-  let entries = await getAllEntries(entryType, Token);
+  let entries = await getEntries(entryType, Token);
   expect(entries).toEqual(expect.arrayContaining(rows));
 
-  entries = await getAllEntries(entryType, Token, { key: "key2" });
+  entries = await getEntries(entryType, Token, { key: "key2" });
   expect(entries).not.toEqual(expect.arrayContaining([rows[0]]));
 
-  entries = await getAllEntries(entryType, Token, { userId: 1 });
+  entries = await getEntries(entryType, Token, { userId: 1 });
   expect(entries).not.toEqual(expect.arrayContaining([rows[1]]));
 });

@@ -42,14 +42,14 @@ export async function getStatus() {
 }
 
 /**
- * Get all entries
+ * Get entries
  *
  * @param {string} entryType Type of Entries
  * @param {string} token Auth Token
  * @param {Object} [params] Query parameters
  * @returns {Promise<(Array<Object>|Error)>}
  */
-export async function getAllEntries(entryType, token, params) {
+export async function getEntries(entryType, token, params) {
   const query = params
     ? Object.keys(params).reduce((str, key) => {
         const k = snakeCase(key);
