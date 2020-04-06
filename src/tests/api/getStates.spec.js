@@ -1,46 +1,35 @@
-import {
-  getUserStates,
-  getTransactionStates,
-  getLoanStates,
-} from "../../utils/api";
+import { getStates } from "../../utils/api";
 import { isAuthorized, Token } from "./utils";
 
 test("get states", async () => {
+  const type = "type1";
   const res = ["state1", "state2", "state3"];
 
-  fetch.mockResponse(req =>
-    Promise.resolve(
-      isAuthorized(req)
-        ? JSON.stringify(res)
-        : { status: 401, statusText: "Unauthorized" }
-    )
-  );
+  fetch.mockResponse(req => {
+    if (!isAuthorized(req)) {
+      return Promise.resolve({ status: 401, statusText: "Unauthorized" });
+    }
+    if (!req.url.endsWith(type) && !req.url.includes(`/${type}?`)) {
+      return Promise.resolve({ status: 404, statusText: "Not Found" });
+    }
+    return Promise.resolve(JSON.stringify(res));
+  });
 
   let error;
   try {
-    await getUserStates();
+    await getStates();
   } catch (err) {
     error = err;
   }
   expect(error).toEqual(new Error("Unauthorized"));
-  const userStates = await getUserStates(Token);
-  expect(userStates).toEqual(expect.arrayContaining(res));
 
   try {
-    await getTransactionStates();
+    await getStates("foo", Token);
   } catch (err) {
     error = err;
   }
-  expect(error).toEqual(new Error("Unauthorized"));
-  const transactionStates = await getTransactionStates(Token);
-  expect(transactionStates).toEqual(expect.arrayContaining(res));
+  expect(error).toEqual(new Error("Not Found"));
 
-  try {
-    await getLoanStates();
-  } catch (err) {
-    error = err;
-  }
-  expect(error).toEqual(new Error("Unauthorized"));
-  const loanStates = await getLoanStates(Token);
-  expect(loanStates).toEqual(expect.arrayContaining(res));
+  const states = await getStates(type, Token);
+  expect(states).toEqual(expect.arrayContaining(res));
 });

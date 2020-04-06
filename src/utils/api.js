@@ -62,37 +62,14 @@ export async function getAllEntries(entryType, token, params) {
 }
 
 /**
- * Get User states
+ * Get states
  *
+ * @param {string} type Type of States
  * @param {string} token Auth Token
  * @returns {Promise<(Array<String>|Error)>}
  */
-export async function getUserStates(token) {
-  const res = await get("/api/states/user", token);
-  const states = await res.json();
-  return states;
-}
-
-/**
- * Get Transaction states
- *
- * @param {string} token Auth Token
- * @returns {Promise<(Array<String>|Error)>}
- */
-export async function getTransactionStates(token) {
-  const res = await get("/api/states/transaction", token);
-  const states = await res.json();
-  return states;
-}
-
-/**
- * Get Loan states
- *
- * @param {string} token Auth Token
- * @returns {Promise<(Array<String>|Error)>}
- */
-export async function getLoanStates(token) {
-  const res = await get("/api/states/loan", token);
+export async function getStates(type, token) {
+  const res = await get(`/api/states/${type}`, token);
   const states = await res.json();
   return states;
 }
