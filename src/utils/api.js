@@ -75,13 +75,14 @@ export async function getStates(type, token) {
 }
 
 /**
- * Get Transaction types
+ * Get types
  *
+ * @param {string} type Type of Types
  * @param {string} token Auth Token
  * @returns {Promise<(Array<String>|Error)>}
  */
-export async function getTransactionTypes(token) {
-  const res = await get("/api/types/transaction", token);
+export async function getTypes(type, token) {
+  const res = await get(`/api/types/${type}`, token);
   const types = await res.json();
   return types;
 }
