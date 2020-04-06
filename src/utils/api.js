@@ -88,40 +88,14 @@ export async function getTypes(type, token) {
 }
 
 /**
- * Get User by Id
+ * Get Entry by Identifier
  *
- * @param {number} id User id
+ * @param {string|number} identifier entry Identifier
+ * @param {string} entryType entry Type
  * @param {string} token Auth Token
- * @returns {Promise<(Object|Error)>}
  */
-export async function getUserById(id, token) {
-  const res = await get(`/api/users/${id}`, token);
-  const user = await res.json();
-  return user;
-}
-
-/**
- * Get Group by Id
- *
- * @param {number} id Group id
- * @param {string} token Auth Token
- * @returns {Promise<(Object|Error)>}
- */
-export async function getGroupById(id, token) {
-  const res = await get(`/api/groups/${id}`, token);
-  const group = await res.json();
-  return group;
-}
-
-/**
- * Get Setting by Key
- *
- * @param {string} key Setting Key
- * @param {string} token Auth Token
- * @returns {Promise<(Object|Error)>}
- */
-export async function getSettingByKey(key, token) {
-  const res = await get(`/api/settings/${key}`, token);
-  const setting = await res.json();
-  return setting;
+export async function getEntryBy(identifier, entryType, token) {
+  const res = await get(`/api/${entryType}/${identifier}`, token);
+  const entry = await res.json();
+  return entry;
 }
