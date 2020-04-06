@@ -1,5 +1,7 @@
 // @ts-check
 
+import snakeCase from "lodash/snakeCase";
+
 /**
  *  Make GET request
  *
@@ -44,10 +46,17 @@ export async function getStatus() {
  *
  * @param {string} entryType Type of Entries
  * @param {string} token Auth Token
+ * @param {Object} [params] Query parameters
  * @returns {Promise<(Array<Object>|Error)>}
  */
-export async function getAllEntries(entryType, token) {
-  const res = await get(`/api/${entryType}`, token);
+export async function getAllEntries(entryType, token, params) {
+  const query = params
+    ? Object.keys(params).reduce((str, key) => {
+        const k = snakeCase(key);
+        return `${str}${k}=${params[key]}`;
+      }, "?")
+    : "";
+  const res = await get(`/api/${entryType}${query}`, token);
   const entries = await res.json();
   return entries;
 }
@@ -111,51 +120,6 @@ export async function getUserById(id, token) {
   const res = await get(`/api/users/${id}`, token);
   const user = await res.json();
   return user;
-}
-
-/**
- * Get Transactions
- *
- * @param {string} token Auth Token
- * @param {Object} [params] Query parameters
- * @returns {Promise<(Array<Object>|Error)>}
- */
-export async function getTransactions(token, params) {
-  const route = "/api/transactions";
-  const query = params
-    ? Object.keys(params).reduce((str, key) => {
-        const k =
-          key === "createdAt"
-            ? "created_at"
-            : key === "userId"
-            ? "user_id"
-            : key;
-        return `${str}${k}=${params[key]}`;
-      }, "?")
-    : "";
-  const res = await get(`${route}${query}`, token);
-  const transactions = await res.json();
-  return transactions;
-}
-
-/**
- * Get Loans
- *
- * @param {string} token Auth Token
- * @param {Object} [params] Query parameters
- * @returns {Promise<(Array<Object>|Error)>}
- */
-export async function getLoans(token, params) {
-  const route = "/api/loans";
-  const query = params
-    ? Object.keys(params).reduce((str, key) => {
-        const k = key === "userId" ? "user_id" : key;
-        return `${str}${k}=${params[key]}`;
-      }, "?")
-    : "";
-  const res = await get(`${route}${query}`, token);
-  const loans = await res.json();
-  return loans;
 }
 
 /**
