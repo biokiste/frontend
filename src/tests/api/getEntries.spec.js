@@ -2,7 +2,7 @@ import URL from "url";
 import { isAuthorized, Token } from "./utils";
 import { getEntries } from "../../utils/api";
 
-test("get all entries", async () => {
+test("get entries", async () => {
   const entryType = "entries";
   const rows = [
     { id: 1, key: "key1", userId: 1 },
@@ -11,10 +11,10 @@ test("get all entries", async () => {
 
   fetch.mockResponse(req => {
     if (!isAuthorized(req)) {
-      return Promise.resolve({ status: 401, statusText: "Unauthorized" });
+      return Promise.resolve({ status: 401 });
     }
     if (!req.url.endsWith(entryType) && !req.url.includes(`/${entryType}?`)) {
-      return Promise.resolve({ status: 404, statusText: "Not Found" });
+      return Promise.resolve({ status: 404 });
     }
     const url = URL.parse(req.url, true);
     if (url.query.user_id) {

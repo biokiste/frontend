@@ -8,18 +8,16 @@ test("get group by id", async () => {
 
   fetch.mockResponse(req => {
     if (!isAuthorized(req)) {
-      return Promise.resolve({ status: 401, statusText: "Unauthorized" });
+      return Promise.resolve({ status: 401 });
     }
     if (!req.url.includes(`/${entryType}/`)) {
-      return Promise.resolve({ status: 404, statusText: "Not Found" });
+      return Promise.resolve({ status: 404 });
     }
     const parts = req.url.split("/");
     const identifier = parts[parts.length - 1];
     const idx = res.findIndex(item => item.key === identifier);
     return Promise.resolve(
-      idx === -1
-        ? { status: 404, statusText: "Not Found" }
-        : JSON.stringify(res[idx])
+      idx === -1 ? { status: 404 } : JSON.stringify(res[idx])
     );
   });
 

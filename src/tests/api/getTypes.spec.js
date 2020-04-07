@@ -7,10 +7,10 @@ test("get types", async () => {
 
   fetch.mockResponse(req => {
     if (!isAuthorized(req)) {
-      return Promise.resolve({ status: 401, statusText: "Unauthorized" });
+      return Promise.resolve({ status: 401 });
     }
     if (!req.url.endsWith(type) && !req.url.includes(`/${type}?`)) {
-      return Promise.resolve({ status: 404, statusText: "Not Found" });
+      return Promise.resolve({ status: 404 });
     }
     return Promise.resolve(JSON.stringify(res));
   });
