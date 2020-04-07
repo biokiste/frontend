@@ -6,29 +6,22 @@ test("get states", async () => {
   const res = ["state1", "state2", "state3"];
 
   fetch.mockResponse(req => {
+    if (!req.url.endsWith(type) && !req.url.includes(`/${type}?`)) {
+      return Promise.reject("404 page not found");
+    }
     if (!isAuthorized(req)) {
       return Promise.resolve({ status: 401 });
-    }
-    if (!req.url.endsWith(type) && !req.url.includes(`/${type}?`)) {
-      return Promise.resolve({ status: 404 });
     }
     return Promise.resolve(JSON.stringify(res));
   });
 
   let error;
   try {
-    await getStates();
+    await getStates(type);
   } catch (err) {
     error = err;
   }
   expect(error).toEqual(new Error("Unauthorized"));
-
-  try {
-    await getStates("foo", Token);
-  } catch (err) {
-    error = err;
-  }
-  expect(error).toEqual(new Error("Not Found"));
 
   const states = await getStates(type, Token);
   expect(states).toEqual(expect.arrayContaining(res));

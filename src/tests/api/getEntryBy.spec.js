@@ -7,11 +7,11 @@ test("get group by id", async () => {
   const res = [{ key: "key1" }, { key: "key2" }];
 
   fetch.mockResponse(req => {
+    if (!req.url.includes(`/${entryType}/`)) {
+      return Promise.reject("404 page not found");
+    }
     if (!isAuthorized(req)) {
       return Promise.resolve({ status: 401 });
-    }
-    if (!req.url.includes(`/${entryType}/`)) {
-      return Promise.resolve({ status: 404 });
     }
     const parts = req.url.split("/");
     const identifier = parts[parts.length - 1];
@@ -23,18 +23,11 @@ test("get group by id", async () => {
 
   let error;
   try {
-    await getEntryBy();
+    await getEntryBy("key1", entryType);
   } catch (err) {
     error = err;
   }
   expect(error).toEqual(new Error("Unauthorized"));
-
-  try {
-    await getEntryBy("key1", "unavailable", Token);
-  } catch (err) {
-    error = err;
-  }
-  expect(error).toEqual(new Error("Not Found"));
 
   try {
     await getEntryBy("key3", entryType, Token);

@@ -10,11 +10,11 @@ test("get entries", async () => {
   ];
 
   fetch.mockResponse(req => {
+    if (!req.url.endsWith(entryType) && !req.url.includes(`/${entryType}?`)) {
+      return Promise.reject("404 page not found");
+    }
     if (!isAuthorized(req)) {
       return Promise.resolve({ status: 401 });
-    }
-    if (!req.url.endsWith(entryType) && !req.url.includes(`/${entryType}?`)) {
-      return Promise.resolve({ status: 404 });
     }
     const url = URL.parse(req.url, true);
     if (url.query.user_id) {
@@ -35,18 +35,11 @@ test("get entries", async () => {
 
   let error;
   try {
-    await getEntries();
+    await getEntries(entryType);
   } catch (err) {
     error = err;
   }
   expect(error).toEqual(new Error("Unauthorized"));
-
-  try {
-    await getEntries("unavailable", Token);
-  } catch (err) {
-    error = err;
-  }
-  expect(error).toEqual(new Error("Not Found"));
 
   let entries = await getEntries(entryType, Token);
   expect(entries).toEqual(expect.arrayContaining(rows));
