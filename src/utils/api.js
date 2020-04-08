@@ -117,6 +117,26 @@ export async function addEntry(data, entryType, token) {
 }
 
 /**
+ * Update Entry
+ *
+ * @param {string|string} identifier Row identifier
+ * @param {Object|Array} data Body Data
+ * @param {*} entryType Type of Entry
+ * @param {*} token Auth Token
+ * @returns {Promise<(Object|Error)>}
+ */
+export async function updateEntry(identifier, data, entryType, token) {
+  const res = await request(
+    `/api/${entryType}/${identifier}`,
+    token,
+    "PATCH",
+    data
+  );
+  const result = res.json();
+  return result;
+}
+
+/**
  * Get States
  *
  * @param {string} type Type of States
