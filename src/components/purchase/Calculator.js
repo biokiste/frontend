@@ -118,6 +118,9 @@ function Calculator(props) {
   const { value, reset } = useCalculator();
 
   const handleClick = btnValue => {
+    if (value === "0") {
+      return;
+    }
     onSubmit &&
       onSubmit(btnValue, btnValue.startsWith("percent") ? `-${value}` : value);
     reset();
