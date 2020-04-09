@@ -7,6 +7,6 @@ import "../src/styles/tailwind.css";
 addDecorator(withA11y);
 addParameters({
   viewport: {
-    viewports: INITIAL_VIEWPORTS
-  }
+    viewports: INITIAL_VIEWPORTS,
+  },
 });
