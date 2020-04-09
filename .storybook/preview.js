@@ -4,6 +4,9 @@ import { INITIAL_VIEWPORTS } from "@storybook/addon-viewport";
 
 import "../src/styles/tailwind.css";
 
+import fetchMock from "fetch-mock";
+fetchMock.config.overwriteRoutes = true;
+
 addDecorator(withA11y);
 addParameters({
   viewport: {
