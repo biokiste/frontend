@@ -3,6 +3,14 @@ import { storiesOf } from "@storybook/react";
 import centered from "@storybook/addon-centered/react";
 import fetchMock from "fetch-mock";
 import SettingsItem from "./SettingsItem";
+import { SmallSettingsItem } from ".";
+
+storiesOf("Settings|SmallSettingsItem", module)
+  .addDecorator(centered)
+  .add("default", () => {
+    fetchMock.getOnce("/api/settings/setting1", { value: "fetched value" });
+    return <SmallSettingsItem settingKey="setting1" />;
+  });
 
 storiesOf("Settings|SettingsItem", module)
   .addDecorator(centered)
