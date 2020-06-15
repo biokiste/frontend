@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Unlock, Lock } from "react-feather";
 import { getEntryBy, updateEntry } from "../../utils/api";
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
 
 function SettingsItem(props) {
   const { title, settingKey: key, editable, token } = props;
@@ -10,6 +11,7 @@ function SettingsItem(props) {
   const [value, setValue] = useState("");
   const [locked, setLocked] = useState(true);
   const inputRef = useRef(null);
+  const { t } = useTranslation("settings");
 
   useEffect(() => {
     async function getSetting() {
@@ -71,12 +73,14 @@ function SettingsItem(props) {
           value={value}
           onChange={handleChange}
           disabled={locked}
+          aria-label={title}
         />
       </div>
       {editable && (
         <button
           data-testid="settings-item-toggle"
           className="focus:outline-none hover:opacity-50"
+          aria-label={locked ? t("unlock") : t("lock")}
           onClick={handleClick}
         >
           {locked ? <Lock size={20} /> : <Unlock size={20} />}
